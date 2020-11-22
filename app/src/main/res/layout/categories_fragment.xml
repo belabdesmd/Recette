@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:rotationY="@integer/swipe_direction"
+    tools:context=".views.fragments.CategoriesFragment">
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_categories"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="32dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/categories_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="64dp" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:fillViewport="true">
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmer_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:orientation="vertical"
+            app:shimmer_direction="left_to_right"
+            app:shimmer_repeat_mode="restart">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <include
+                    android:id="@+id/first"
+                    layout="@layout/category_item_placeholder"
+                    android:layout_width="match_parent"
+                    android:layout_height="164dp" />
+
+                <include
+                    android:id="@+id/second"
+                    layout="@layout/category_item_placeholder"
+                    android:layout_width="match_parent"
+                    android:layout_height="164dp"
+                    android:layout_below="@id/first" />
+
+                <include
+                    android:id="@+id/third"
+                    layout="@layout/category_item_placeholder"
+                    android:layout_width="match_parent"
+                    android:layout_height="164dp"
+                    android:layout_below="@id/second" />
+
+                <include
+                    android:id="@+id/forth"
+                    layout="@layout/category_item_placeholder"
+                    android:layout_width="match_parent"
+                    android:layout_height="164dp"
+                    android:layout_below="@id/third" />
+
+                <include
+                    android:id="@+id/fifth"
+                    layout="@layout/category_item_placeholder"
+                    android:layout_width="match_parent"
+                    android:layout_height="164dp"
+                    android:layout_below="@id/forth" />
+
+            </RelativeLayout>
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/error_image"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/error"
+            app:tint="@color/secondaryTextColor" />
+
+        <TextView
+            android:id="@+id/error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/error_image"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="48dp"
+            android:text="@string/general_error"
+            android:textAlignment="center"
+            style="@style/SecondaryText"/>
+
+    </RelativeLayout>
+
+</FrameLayout>

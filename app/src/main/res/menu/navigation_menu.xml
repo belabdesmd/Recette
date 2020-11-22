@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="@string/pages">
+        <menu>
+            <item
+                android:id="@+id/categories_menu"
+                android:icon="@drawable/categories_action"
+                android:title="@string/categories_action" />
+            <item
+                android:id="@+id/saved_recipes_menu"
+                android:icon="@drawable/bookmark_action"
+                android:title="@string/saved_recipes_action" />
+            <item
+                android:id="@+id/shopping_list_menu"
+                android:icon="@drawable/shopping_list_action"
+                android:title="@string/shopping_list_action" />
+        </menu>
+    </item>
+
+    <item android:title="@string/social_media">
+        <menu>
+            <item
+                android:id="@+id/youtube_menu"
+                android:icon="@drawable/youtube"
+                android:title="@string/youtube_action" />
+            <item
+                android:id="@+id/instagram_menu"
+                android:icon="@drawable/instagram"
+                android:title="@string/instagram_action" />
+            <item
+                android:id="@+id/facebook_menu"
+                android:icon="@drawable/facebook"
+                android:title="@string/facebook_action" />
+            <item
+                android:id="@+id/twitter_menu"
+                android:icon="@drawable/twitter"
+                android:title="@string/twitter_action" />
+        </menu>
+    </item>
+</menu>

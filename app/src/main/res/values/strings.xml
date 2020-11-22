@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">Recette</string>
+
+    <!-- Settings -->
+    <string name="website">www.facebook.com</string>
+    <string name="BASE_API_URL">https://sheets.googleapis.com/v4/spreadsheets/</string>
+    <item name="AVG_ADDING_TIME" type="integer">12</item>
+
+    <!-- ViewPager Tabs -->
+    <string-array name="main_tab_titles">
+        <item>Home</item>
+        <item>Categories</item>
+        <item>Saved</item>
+    </string-array>
+    <string-array name="recipe_tab_titles">
+        <item>Ingredients</item>
+        <item>Steps</item>
+    </string-array>
+
+    <!-- Drawer Menu Texts -->
+    <string name="pages">Pages</string>
+    <string name="saved_recipes_action">Saved Recipes</string>
+    <string name="categories_action">Categories</string>
+    <string name="shopping_list_action">Shopping List</string>
+    <string name="contact_us_action">Contact Us</string>
+    <string name="social_media">Social Media</string>
+    <string name="youtube_action">Youtube</string>
+    <string name="youtube_channel_id" translatable="false">UCVXD2kNki3rfLMhF8uNIcBQ</string>
+    <string name="instagram_action">Instagram</string>
+    <string name="instagram_username" translatable="false">instagram</string>
+    <string name="facebook_action">Facebook</string>
+    <string name="facebook_page_link" translatable="false">https://www.facebook.com/</string>
+    <string name="twitter_action">Twitter</string>
+    <string name="twitter_id" translatable="false">twitter</string>
+
+    <!-- Errors -->
+    <string name="general_error">An error occurred, If there\'s no network connection, make sure you\'re connected to Wi-fi or mobile connection and try again.</string>
+    <string name="empty_error">It looks like there\'s no content available.</string>
+    <string name="wrong_recipe_error">The recipe you requested doesn\'t exist.</string>
+
+    <!-- Titles -->
+    <string name="shopping_list">Shopping List</string>
+    <string name="last_update">Last Update</string>
+
+    <!-- Others -->
+    <string name="steps">Steps</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="min">min</string>
+    <string name="all_recipes">All Recipes</string>
+    <string name="see_more">See More</string>
+
+    <!-- DO NOT CHANGE THIS -->
+    <item name="swipe_direction" type="integer">0</item>
+</resources>

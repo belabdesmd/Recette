@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.belfoapps.recette.views.MainFragment"
+        android:label="main_fragment"
+        tools:layout="@layout/main_fragment">
+        <action
+            android:id="@+id/recipes"
+            app:destination="@id/recipesFragment" />
+        <action
+            android:id="@+id/shoppings"
+            app:destination="@id/shoppingsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/recipesFragment"
+        android:name="com.belfoapps.recette.views.fragments.RecipesFragment"
+        android:label="recipes_fragment"
+        tools:layout="@layout/recipes_fragment" />
+    <action
+        android:id="@+id/recipe"
+        app:destination="@id/recipeFragment" />
+    <fragment
+        android:id="@+id/recipeFragment"
+        android:name="com.belfoapps.recette.views.fragments.RecipeFragment"
+        android:label="recipe_fragment"
+        tools:layout="@layout/recipe_fragment" />
+    <fragment
+        android:id="@+id/shoppingsFragment"
+        android:name="com.belfoapps.recette.views.fragments.ShoppingsFragment"
+        android:label="shoppings_fragment"
+        tools:layout="@layout/shoppings_fragment" />
+</navigation>

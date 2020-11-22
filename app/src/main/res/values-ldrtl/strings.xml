@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="swipe_direction" type="integer">180</item>
+</resources>
