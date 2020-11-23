@@ -1,17 +1,16 @@
 package com.belfoapps.recette.views.fragments;
 
-import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.belfoapps.recette.R;
 import com.belfoapps.recette.base.HomeListener;
@@ -20,13 +19,14 @@ import com.belfoapps.recette.models.pojo.Category;
 import com.belfoapps.recette.ui.adapters.CategoriesAdapter;
 import com.belfoapps.recette.ui.custom.RecipesItemDecoration;
 import com.belfoapps.recette.viewmodels.CategoriesViewModel;
+import com.belfoapps.recette.views.MainFragment;
 
 import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class CategoriesFragment extends Fragment {
+public class CategoriesFragment extends Fragment implements MainFragment.CategoriesDataLoadedListener {
     private static final String TAG = "CategoriesFragment";
     private static final int COL_NUM = 1;
 
@@ -39,6 +39,13 @@ public class CategoriesFragment extends Fragment {
     private HomeListener listener;
     private boolean error_occurred = false;
 
+    //Observers
+    private final Observer<List<Category>> categoriesObserver = categories -> {
+        if (mAdapter == null)
+            initRecyclerView(categories);
+        else updateRecyclerView(categories);
+    };
+
     /***********************************************************************************************
      * *********************************** LifeCycle
      */
@@ -47,6 +54,7 @@ public class CategoriesFragment extends Fragment {
         super.onCreate(savedInstanceState);
         try {
             listener = (HomeListener) getParentFragment();
+            ((MainFragment) getParentFragment()).setDataLoadedListener(this);
         } catch (ClassCastException e) {
             throw new ClassCastException("Calling fragment must implement Callback interface");
         }
@@ -67,14 +75,10 @@ public class CategoriesFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(CategoriesViewModel.class);
 
         //Init UI
-        mBinding.shimmerViewContainer.startShimmer();
+        init();
 
         //Get Data
-        mViewModel.getCategoriesData().observe(getViewLifecycleOwner(), categories -> {
-            if (mAdapter == null)
-                initRecyclerView(categories);
-            else updateRecyclerView(categories);
-        });
+        mViewModel.getCategoriesData().observe(getViewLifecycleOwner(), categoriesObserver);
 
         //Refresh Data
         mBinding.swipeRefreshCategories.setOnRefreshListener(() -> {
@@ -84,13 +88,31 @@ public class CategoriesFragment extends Fragment {
         });
     }
 
-    public void getData() {
-        mViewModel.getCategories(true);
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mBinding = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mViewModel.getCategoriesData().removeObserver(categoriesObserver);
+        listener = null;
     }
 
     /***********************************************************************************************
      * *********************************** Methods
      */
+    private void init() {
+        mBinding.shimmerViewContainer.startShimmer();
+    }
+
+    @Override
+    public void getData() {
+        mViewModel.getCategories(true);
+    }
+
     public void initRecyclerView(List<Category> categories) {
         //Declarations
         StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(COL_NUM, StaggeredGridLayoutManager.VERTICAL);
@@ -119,6 +141,7 @@ public class CategoriesFragment extends Fragment {
         else showError();
     }
 
+    @Override
     public void showError() {
         //An Error Occurred
         error_occurred = true;

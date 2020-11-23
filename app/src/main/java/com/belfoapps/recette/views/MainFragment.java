@@ -3,7 +3,6 @@ package com.belfoapps.recette.views;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.belfoapps.recette.R;
@@ -49,9 +49,34 @@ public class MainFragment extends Fragment implements HomeListener {
     private MainListener listener;
     private GeneralPagerAdapter mAdapter;
     private MainFragmentBinding mBinding;
-    private HomeFragment homeFragment;
-    private CategoriesFragment categoriesFragment;
+    private HomeDataLoadedListener homeLoadedListener;
+    private CategoriesDataLoadedListener categoriesLoadedListener;
 
+    public interface HomeDataLoadedListener {
+
+        void getData();
+
+        void showError();
+    }
+
+    public interface CategoriesDataLoadedListener {
+
+        void getData();
+
+        void showError();
+    }
+
+    //Observers
+    private final Observer<Boolean> canGetObserver = canGet -> {
+        if (canGet) {
+            homeLoadedListener.getData();
+            categoriesLoadedListener.getData();
+        }
+        else {
+            homeLoadedListener.showError();
+            categoriesLoadedListener.showError();
+        }
+    };
 
     /***********************************************************************************************
      * *********************************** LifeCycle
@@ -72,35 +97,51 @@ public class MainFragment extends Fragment implements HomeListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d(TAG, "onViewCreated");
 
         //Set ViewModel
         mViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 
         //Init UI
-        setPageName(0);
-        initViewPager();
-
-        //Init Listener
-        initListeners();
+        init();
 
         //Get Data After Loaded
-        mViewModel.getDataLoaded().observe(getViewLifecycleOwner(), canGet -> {
-            Log.d(TAG, "onViewCreated: " + canGet);
-            if (canGet) {
-                homeFragment.getData();
-                categoriesFragment.getData();
-            } else {
-                homeFragment.showError();
-                categoriesFragment.showError();
-            }
-        });
+        mViewModel.getDataLoaded().observe(getViewLifecycleOwner(), canGetObserver);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mBinding = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mViewModel.getDataLoaded().removeObserver(canGetObserver);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
+    }
+
+    public void setDataLoadedListener(HomeDataLoadedListener loadedListener) {
+        this.homeLoadedListener = loadedListener;
+    }
+
+    public void setDataLoadedListener(CategoriesDataLoadedListener loadedListener) {
+        this.categoriesLoadedListener = loadedListener;
     }
 
     /***********************************************************************************************
      * *********************************** Methods
      */
-    private void initListeners() {
+    private void init() {
+        setPageName(0);
+        initViewPager();
+
+        //Init Listener
         mBinding.shoppingListIcon.setOnClickListener(v -> listener.goToShoppings());
         mBinding.menu.setOnClickListener(v -> listener.openDrawer());
     }
@@ -121,8 +162,8 @@ public class MainFragment extends Fragment implements HomeListener {
     public void initViewPager() {
         ArrayList<Fragment> fragments = new ArrayList<>();
 
-        homeFragment = new HomeFragment();
-        categoriesFragment = new CategoriesFragment();
+        HomeFragment homeFragment = new HomeFragment();
+        CategoriesFragment categoriesFragment = new CategoriesFragment();
         SavedFragment savedRecipesFragment = new SavedFragment();
 
         fragments.add(homeFragment);

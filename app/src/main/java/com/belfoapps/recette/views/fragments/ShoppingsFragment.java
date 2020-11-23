@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -38,6 +39,16 @@ public class ShoppingsFragment extends Fragment {
     private ShoppingListAdapter mAdapter;
     private MainListener listener;
 
+    //Observers
+    private final Observer<List<Shopping>> shoppingsObserver = shoppings -> {
+        initRecyclerView(shoppings);
+        setLastTimeUpdated(mViewModel.getLastTimeUpdated());
+    };
+    private final Observer<Boolean> removedObserver = removed -> {
+        setLastTimeUpdated(mViewModel.getLastTimeUpdated());
+        clearRecyclerView();
+    };
+
     /***********************************************************************************************
      * *********************************** LifeCycle
      */
@@ -65,17 +76,30 @@ public class ShoppingsFragment extends Fragment {
         initListener();
 
         //Get Data
-        mViewModel.getShoppingData().observe(getViewLifecycleOwner(), shoppings -> {
-            initRecyclerView(shoppings);
-            setLastTimeUpdated(mViewModel.getLastTimeUpdated());
-        });
+        mViewModel.getShoppingData().observe(getViewLifecycleOwner(), shoppingsObserver);
         mViewModel.getShoppings();
 
         //Cleared Listener
-        mViewModel.getRemovedData().observe(getViewLifecycleOwner(), aBoolean -> {
-            setLastTimeUpdated(mViewModel.getLastTimeUpdated());
-            clearRecyclerView();
-        });
+        mViewModel.getRemovedData().observe(getViewLifecycleOwner(), removedObserver);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mBinding = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mViewModel.getShoppingData().removeObserver(shoppingsObserver);
+        mViewModel.getRemovedData().removeObserver(removedObserver);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
     }
 
     /***********************************************************************************************

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -38,6 +39,13 @@ public class RecipesFragment extends Fragment {
     private RecipesAdapter mAdapter;
     private MainListener listener;
 
+    //Observers
+    private final Observer<List<Recipe>> recipesObserver = recipes -> {
+        if (mAdapter == null)
+            initRecyclerView(recipes);
+        else updateRecyclerView(recipes);
+    };
+
     /***********************************************************************************************
      * *********************************** LifeCycle
      */
@@ -62,29 +70,47 @@ public class RecipesFragment extends Fragment {
         mViewModel = new ViewModelProvider(requireActivity()).get(RecipesViewModel.class);
 
         //Init UI
-        mBinding.shimmerViewContainer.startShimmer();
-
-        //Init Listener
-        mBinding.back.setOnClickListener(v -> listener.goBack());
+        init();
 
         //Get Data
         if (getArguments() != null) {
-            mViewModel.getRecipesData().observe(getViewLifecycleOwner(), recipes -> {
-                if (mAdapter == null)
-                    initRecyclerView(recipes);
-                else updateRecyclerView(recipes);
-            });
+            mViewModel.getRecipesData().observe(getViewLifecycleOwner(), recipesObserver);
             mViewModel.getRecipes(getArguments().getLong("categoryId", 0));
-
             mBinding.categoryName.setText(getArguments().getString("categoryName"));
+
             mBinding.swipeRefreshRecipes.setOnRefreshListener(() ->
                     mViewModel.getRecipes(getArguments().getLong("categoryId", 0)));
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mBinding = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mViewModel.getRecipesData().removeObserver(recipesObserver);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
+    }
+
     /***********************************************************************************************
      * *********************************** Methods
      */
+    private void init() {
+        mBinding.shimmerViewContainer.startShimmer();
+
+        //Init Listener
+        mBinding.back.setOnClickListener(v -> listener.goBack());
+    }
+
     public void initRecyclerView(List<Recipe> recipes) {
         StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(COL_NUM, StaggeredGridLayoutManager.VERTICAL);
         mAdapter = new RecipesAdapter(recipes, listener, getContext());

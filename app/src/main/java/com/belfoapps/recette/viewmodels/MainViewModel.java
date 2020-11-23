@@ -1,16 +1,12 @@
 package com.belfoapps.recette.viewmodels;
 
-import android.util.Log;
-
 import androidx.hilt.lifecycle.ViewModelInject;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.belfoapps.recette.base.AppDatabase;
 import com.belfoapps.recette.models.SharedPreferencesHelper;
 import com.belfoapps.recette.utils.DataFetcher;
-//import com.google.android.gms.common.api.internal.LifecycleCallback;
 
 public class MainViewModel extends ViewModel {
     private static final String TAG = "MainViewModel";
@@ -34,9 +30,8 @@ public class MainViewModel extends ViewModel {
     /***********************************************************************************************
      * *********************************** Methods
      */
-    public void loadData(LifecycleOwner owner){
+    public void loadData(LifecycleOwner owner) {
         fetcher.getFetched().observe(owner, fetched -> {
-            Log.d(TAG, "DataLoaded");
             dataLoaded.setValue(fetched);
             //Save Timestamp LOG
             mSharedPrefs.setTimestamp(System.currentTimeMillis());

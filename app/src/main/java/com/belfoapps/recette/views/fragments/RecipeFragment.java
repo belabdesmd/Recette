@@ -8,10 +8,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -49,8 +52,11 @@ public class RecipeFragment extends Fragment {
      */
     private RecipeFragmentBinding mBinding;
     private RecipeViewModel mViewModel;
-    private GeneralPagerAdapter mAdapter;
     private MainListener listener;
+
+    //Observers
+    private final Observer<Recipe> recipeObserver = this::setContent;
+    private final Observer<Boolean> bookmarkedObserver = this::setBookmarked;
 
     /***********************************************************************************************
      * *********************************** LifeCycle
@@ -75,16 +81,14 @@ public class RecipeFragment extends Fragment {
         //Set ViewModel
         mViewModel = new ViewModelProvider(requireActivity()).get(RecipeViewModel.class);
 
-        //Init UI
-        initUI();
-
-        //Init Listener
-        initListener();
+        //Init
+        init();
 
         //Get Data
-        mViewModel.getRecipeData().observe(getViewLifecycleOwner(), this::setContent);
+        mViewModel.getRecipeData().observe(getViewLifecycleOwner(), recipeObserver);
         if (getArguments() != null)
             mViewModel.getRecipe(getArguments().getLong("recipeId", 0));
+
         //Refresh
         mBinding.swipeRefreshRecipe.setOnRefreshListener(() -> {
             //Init UI
@@ -93,19 +97,38 @@ public class RecipeFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mBinding = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mViewModel.getRecipeData().removeObserver(recipeObserver);
+        mViewModel.getBookmarkedData().removeObserver(bookmarkedObserver);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
+    }
+
     /***********************************************************************************************
      * *********************************** Methods
      */
-    private void initUI() {
+    private void init() {
+        //Init UI
         mBinding.back.bringToFront();
         mBinding.backContent.bringToFront();
         mBinding.shimmerViewContainer.startShimmer();
 
         //Bookmarked Listener
-        mViewModel.getBookmarkedData().observe(getViewLifecycleOwner(), this::setBookmarked);
-    }
+        mViewModel.getBookmarkedData().observe(getViewLifecycleOwner(), bookmarkedObserver);
 
-    private void initListener() {
+        //Listeners
         mBinding.back.setOnClickListener(v -> listener.goBack());
         mBinding.backContent.setOnClickListener(v -> listener.goBack());
         mBinding.bookmark.setOnClickListener(v -> {

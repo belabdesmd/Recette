@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -18,13 +19,14 @@ import com.belfoapps.recette.models.pojo.Recipe;
 import com.belfoapps.recette.ui.adapters.RecipesAdapter;
 import com.belfoapps.recette.ui.custom.RecipesItemDecoration;
 import com.belfoapps.recette.viewmodels.HomeViewModel;
+import com.belfoapps.recette.views.MainFragment;
 
 import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements MainFragment.HomeDataLoadedListener {
     private static final String TAG = "HomeFragment";
     private static final int COL_NUM = 2;
 
@@ -37,6 +39,13 @@ public class HomeFragment extends Fragment {
     private HomeFragmentBinding mBinding;
     private boolean error_occurred = false;
 
+    //Observers
+    private final Observer<List<Recipe>> recipesObserver = recipes -> {
+        if (mAdapter == null)
+            initRecyclerView(recipes);
+        else updateRecyclerView(recipes);
+    };
+
     /***********************************************************************************************
      * *********************************** LifeCycle
      */
@@ -45,6 +54,7 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         try {
             listener = (HomeListener) getParentFragment();
+            ((MainFragment) getParentFragment()).setDataLoadedListener(this);
         } catch (ClassCastException e) {
             throw new ClassCastException("Calling fragment must implement Callback interface");
         }
@@ -65,17 +75,10 @@ public class HomeFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
         //Init UI
-        mBinding.shimmerViewContainer.startShimmer();
-
-        //Init Listener
-        mBinding.seeMore.setOnClickListener(v -> listener.allRecipes());
+        init();
 
         //Get Data
-        mViewModel.getRecipesData().observe(getViewLifecycleOwner(), recipes -> {
-            if (mAdapter == null)
-                initRecyclerView(recipes);
-            else updateRecyclerView(recipes);
-        });
+        mViewModel.getRecipesData().observe(getViewLifecycleOwner(), recipesObserver);
 
         //Refresh
         mBinding.swipeRefreshHome.setOnRefreshListener(() -> {
@@ -85,13 +88,34 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    public void getData() {
-        mViewModel.getRecipes(true);
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mBinding = null;
+        mViewModel.getRecipesData().removeObserver(recipesObserver);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        listener = null;
     }
 
     /***********************************************************************************************
      * *********************************** Methods
      */
+    private void init() {
+        mBinding.shimmerViewContainer.startShimmer();
+
+        //Init Listener
+        mBinding.seeMore.setOnClickListener(v -> listener.allRecipes());
+    }
+
+    @Override
+    public void getData() {
+        mViewModel.getRecipes(true);
+    }
+
     public void initRecyclerView(List<Recipe> recipes) {
         StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(COL_NUM, StaggeredGridLayoutManager.VERTICAL);
         mAdapter = new RecipesAdapter(recipes, listener, getContext());
@@ -121,6 +145,7 @@ public class HomeFragment extends Fragment {
         else showError();
     }
 
+    @Override
     public void showError() {
         //An Error Occurred
         error_occurred = true;

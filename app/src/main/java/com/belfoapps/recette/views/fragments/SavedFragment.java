@@ -1,29 +1,24 @@
 package com.belfoapps.recette.views.fragments;
 
-import androidx.lifecycle.ViewModelProvider;
-
-import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
 import com.belfoapps.recette.R;
 import com.belfoapps.recette.base.HomeListener;
-import com.belfoapps.recette.base.MainListener;
-import com.belfoapps.recette.databinding.HomeFragmentBinding;
 import com.belfoapps.recette.databinding.SavedFragmentBinding;
 import com.belfoapps.recette.models.pojo.Recipe;
 import com.belfoapps.recette.ui.adapters.RecipesAdapter;
 import com.belfoapps.recette.ui.custom.RecipesItemDecoration;
 import com.belfoapps.recette.viewmodels.SavedViewModel;
-import com.belfoapps.recette.views.MainActivity;
 
 import java.util.List;
 
@@ -41,6 +36,13 @@ public class SavedFragment extends Fragment {
     private SavedViewModel mViewModel;
     private RecipesAdapter mAdapter;
     private HomeListener listener;
+
+    //Observers
+    private final Observer<List<Recipe>> recipesObserver = recipes -> {
+        if (mAdapter == null)
+            initRecyclerView(recipes);
+        else updateRecycleView(recipes);
+    };
 
     /***********************************************************************************************
      * *********************************** LifeCycle
@@ -70,20 +72,33 @@ public class SavedFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(SavedViewModel.class);
 
         //Init UI
-        mBinding.shimmerViewContainer.setVisibility(View.GONE);
+        init();
 
         //Get Data
-        mViewModel.getRecipesData().observe(getViewLifecycleOwner(), recipes -> {
-            if (mAdapter == null)
-                initRecyclerView(recipes);
-            else updateRecycleView(recipes);
-        });
+        mViewModel.getRecipesData().observe(getViewLifecycleOwner(), recipesObserver);
         mViewModel.getRecipes();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mBinding = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mViewModel.getRecipesData().removeObserver(recipesObserver);
+        listener = null;
     }
 
     /***********************************************************************************************
      * *********************************** Methods
      */
+    private void init() {
+        mBinding.shimmerViewContainer.setVisibility(View.GONE);
+    }
+
     public void initRecyclerView(List<Recipe> recipes) {
         StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(COL_NUM, StaggeredGridLayoutManager.VERTICAL);
         mAdapter = new RecipesAdapter(recipes, listener, getContext());

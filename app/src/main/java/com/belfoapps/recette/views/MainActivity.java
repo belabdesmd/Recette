@@ -45,6 +45,24 @@ public class MainActivity extends AppCompatActivity implements MainListener {
         mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         //Init Navigation
+        initNavigation();
+
+        //Loading Data
+        if (savedInstanceState == null)
+            mViewModel.loadData(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mBinding = null;
+    }
+
+    /***********************************************************************************************
+     * *********************************** Methods
+     */
+    private void initNavigation() {
+        //Init Navigation
         mBinding.navView.setItemIconTintList(null);
         mBinding.navView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
@@ -86,15 +104,8 @@ public class MainActivity extends AppCompatActivity implements MainListener {
             mBinding.drawerLayout.closeDrawers();
             return true;
         });
-
-        //Loading Data
-        if (savedInstanceState == null)
-            mViewModel.loadData(this);
     }
 
-    /***********************************************************************************************
-     * *********************************** Methods
-     */
     @Override
     public void openDrawer() {
         mBinding.drawerLayout.openDrawer(GravityCompat.START);
