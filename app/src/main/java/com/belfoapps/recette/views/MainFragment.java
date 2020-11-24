@@ -45,6 +45,7 @@ public class MainFragment extends Fragment implements HomeListener {
     /***********************************************************************************************
      * *********************************** Declarations
      */
+    private boolean back = false;
     private MainViewModel mViewModel;
     private MainListener listener;
     private GeneralPagerAdapter mAdapter;
@@ -71,8 +72,7 @@ public class MainFragment extends Fragment implements HomeListener {
         if (canGet) {
             homeLoadedListener.getData();
             categoriesLoadedListener.getData();
-        }
-        else {
+        } else {
             homeLoadedListener.showError();
             categoriesLoadedListener.showError();
         }
@@ -81,6 +81,14 @@ public class MainFragment extends Fragment implements HomeListener {
     /***********************************************************************************************
      * *********************************** LifeCycle
      */
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //In Case Back Pressed
+        if (getArguments() != null && getArguments().getBoolean("back"))
+            back = getArguments().getBoolean("back");
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -101,23 +109,18 @@ public class MainFragment extends Fragment implements HomeListener {
         //Set ViewModel
         mViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 
-        //Init UI
-        init();
-
         //Get Data After Loaded
         mViewModel.getDataLoaded().observe(getViewLifecycleOwner(), canGetObserver);
+
+        //Init UI
+        init();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mBinding = null;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
         mViewModel.getDataLoaded().removeObserver(canGetObserver);
+        mBinding = null;
     }
 
     @Override
@@ -234,6 +237,16 @@ public class MainFragment extends Fragment implements HomeListener {
     @Override
     public void allRecipes() {
         listener.allRecipes();
+    }
+
+    @Override
+    public void demandAccess(String mode) {
+        if (back) {
+            if (mode.equals("Home"))
+                homeLoadedListener.getData();
+            if (mode.equals("Categories"))
+                categoriesLoadedListener.getData();
+        }
     }
 
     @Override

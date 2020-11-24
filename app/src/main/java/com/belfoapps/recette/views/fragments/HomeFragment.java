@@ -74,25 +74,33 @@ public class HomeFragment extends Fragment implements MainFragment.HomeDataLoade
         //Init ViewModel
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
-        //Init UI
-        init();
+        if (savedInstanceState == null) {
+            //Loading UI
+            mBinding.shimmerViewContainer.startShimmer();
+            //Load Recipes
+            mViewModel.getRecipesData().observe(getViewLifecycleOwner(), recipesObserver);
+        } else {
+            //Init RecyclerView
+            initRecyclerView(mViewModel.getRecipes());
+        }
 
-        //Get Data
-        mViewModel.getRecipesData().observe(getViewLifecycleOwner(), recipesObserver);
-
-        //Refresh
+        //Init Listener
+        mBinding.seeMore.setOnClickListener(v -> listener.allRecipes());
         mBinding.swipeRefreshHome.setOnRefreshListener(() -> {
             if (mViewModel.ableToFetchData(requireContext()) || error_occurred)
                 mViewModel.refetchData(getViewLifecycleOwner());
             else mBinding.swipeRefreshHome.setRefreshing(false);
         });
+
+        //Demand Access
+        listener.demandAccess("Home");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mBinding = null;
         mViewModel.getRecipesData().removeObserver(recipesObserver);
+        mBinding = null;
     }
 
     @Override
@@ -104,23 +112,14 @@ public class HomeFragment extends Fragment implements MainFragment.HomeDataLoade
     /***********************************************************************************************
      * *********************************** Methods
      */
-    private void init() {
-        mBinding.shimmerViewContainer.startShimmer();
-
-        //Init Listener
-        mBinding.seeMore.setOnClickListener(v -> listener.allRecipes());
-    }
-
     @Override
     public void getData() {
-        mViewModel.getRecipes(true);
+        mViewModel.loadRecipes(true);
     }
 
     public void initRecyclerView(List<Recipe> recipes) {
         StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(COL_NUM, StaggeredGridLayoutManager.VERTICAL);
         mAdapter = new RecipesAdapter(recipes, listener, getContext());
-
-        mBinding.recipesRecyclerview.requestDisallowInterceptTouchEvent(true);
 
         mBinding.recipesRecyclerview.setLayoutManager(mLayoutManager);
         mBinding.recipesRecyclerview.addItemDecoration(new RecipesItemDecoration());
@@ -140,7 +139,7 @@ public class HomeFragment extends Fragment implements MainFragment.HomeDataLoade
             mAdapter.addAll(recipes);
         }
 
-        if (!recipes.isEmpty())
+        if (recipes != null && !recipes.isEmpty())
             showRecipesList();
         else showError();
     }

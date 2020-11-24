@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements MainListener {
     /***********************************************************************************************
      * *********************************** Methods
      */
+    @SuppressLint("NonConstantResourceId")
     private void initNavigation() {
         //Init Navigation
         mBinding.navView.setItemIconTintList(null);
@@ -142,5 +143,12 @@ public class MainActivity extends AppCompatActivity implements MainListener {
     @Override
     public void goBack() {
         onBackPressed();
+    }
+
+    @Override
+    public void backHome() {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("back", true);
+        Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.back, bundle);
     }
 }

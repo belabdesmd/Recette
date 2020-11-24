@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -29,6 +30,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class RecipesFragment extends Fragment {
     private static final String TAG = "RecipesFragment";
+    public static final String ID = "id";
+    public static final String NAME = "name";
     private static final int COL_NUM = 2;
 
     /***********************************************************************************************
@@ -38,6 +41,16 @@ public class RecipesFragment extends Fragment {
     private RecipesViewModel mViewModel;
     private RecipesAdapter mAdapter;
     private MainListener listener;
+    private String categoryName;
+    private Long categoryId;
+
+    //Callbacks
+    private final OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+        @Override
+        public void handleOnBackPressed() {
+            listener.backHome();
+        }
+    };
 
     //Observers
     private final Observer<List<Recipe>> recipesObserver = recipes -> {
@@ -49,6 +62,17 @@ public class RecipesFragment extends Fragment {
     /***********************************************************************************************
      * *********************************** LifeCycle
      */
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            categoryName = getArguments().getString("categoryName");
+            categoryId = getArguments().getLong("categoryId", 0);
+        }
+        //Going back
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -69,30 +93,43 @@ public class RecipesFragment extends Fragment {
         //Set ViewModel
         mViewModel = new ViewModelProvider(requireActivity()).get(RecipesViewModel.class);
 
-        //Init UI
-        init();
+        //Data Observer
+        mViewModel.getRecipesData().observe(getViewLifecycleOwner(), recipesObserver);
 
-        //Get Data
-        if (getArguments() != null) {
-            mViewModel.getRecipesData().observe(getViewLifecycleOwner(), recipesObserver);
-            mViewModel.getRecipes(getArguments().getLong("categoryId", 0));
-            mBinding.categoryName.setText(getArguments().getString("categoryName"));
+        if (savedInstanceState == null) {
+            //Loading UI
+            mBinding.shimmerViewContainer.startShimmer();
+            //Load Recipes
+            mViewModel.loadRecipes(categoryId);
+        } else {
+            categoryId = savedInstanceState.getLong(ID);
+            categoryName = savedInstanceState.getString(NAME);
 
-            mBinding.swipeRefreshRecipes.setOnRefreshListener(() ->
-                    mViewModel.getRecipes(getArguments().getLong("categoryId", 0)));
+            //Init RecyclerView
+            initRecyclerView(mViewModel.getRecipes());
         }
+
+        //Category Name
+        mBinding.categoryName.setText(categoryName);
+
+        //Init Listener
+        mBinding.back.setOnClickListener(v -> listener.backHome());
+        mBinding.swipeRefreshRecipes.setOnRefreshListener(() ->
+                mViewModel.loadRecipes(categoryId));
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(ID, categoryId);
+        outState.putString(NAME, categoryName);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mBinding = null;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
         mViewModel.getRecipesData().removeObserver(recipesObserver);
+        mBinding = null;
     }
 
     @Override
@@ -104,13 +141,6 @@ public class RecipesFragment extends Fragment {
     /***********************************************************************************************
      * *********************************** Methods
      */
-    private void init() {
-        mBinding.shimmerViewContainer.startShimmer();
-
-        //Init Listener
-        mBinding.back.setOnClickListener(v -> listener.goBack());
-    }
-
     public void initRecyclerView(List<Recipe> recipes) {
         StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(COL_NUM, StaggeredGridLayoutManager.VERTICAL);
         mAdapter = new RecipesAdapter(recipes, listener, getContext());
@@ -118,7 +148,7 @@ public class RecipesFragment extends Fragment {
         mBinding.recipesRecyclerview.addItemDecoration(new RecipesItemDecoration());
         mBinding.recipesRecyclerview.setAdapter(mAdapter);
 
-        if (!recipes.isEmpty())
+        if (recipes != null && !recipes.isEmpty())
             showRecipesList();
         else showError();
     }
@@ -132,7 +162,7 @@ public class RecipesFragment extends Fragment {
             mAdapter.addAll(recipes);
         }
 
-        if (!recipes.isEmpty())
+        if (recipes != null && !recipes.isEmpty())
             showRecipesList();
         else showError();
     }

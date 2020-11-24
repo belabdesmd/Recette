@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -39,6 +40,14 @@ public class ShoppingsFragment extends Fragment {
     private ShoppingListAdapter mAdapter;
     private MainListener listener;
 
+    //Callbacks
+    private final OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+        @Override
+        public void handleOnBackPressed() {
+            listener.backHome();
+        }
+    };
+
     //Observers
     private final Observer<List<Shopping>> shoppingsObserver = shoppings -> {
         initRecyclerView(shoppings);
@@ -52,6 +61,13 @@ public class ShoppingsFragment extends Fragment {
     /***********************************************************************************************
      * *********************************** LifeCycle
      */
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //Going back
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -72,28 +88,27 @@ public class ShoppingsFragment extends Fragment {
         //Set ViewModel
         mViewModel = new ViewModelProvider(requireActivity()).get(ShoppingsViewModel.class);
 
+        //Data Observers
+        mViewModel.getShoppingData().observe(getViewLifecycleOwner(), shoppingsObserver);
+        mViewModel.getRemovedData().observe(getViewLifecycleOwner(), removedObserver);
+
+        if (savedInstanceState == null) {
+            //Load Shoppings
+            mViewModel.loadShoppings();
+        } else {
+            initRecyclerView(mViewModel.getShoppings());
+        }
+
         //Init Listener
         initListener();
-
-        //Get Data
-        mViewModel.getShoppingData().observe(getViewLifecycleOwner(), shoppingsObserver);
-        mViewModel.getShoppings();
-
-        //Cleared Listener
-        mViewModel.getRemovedData().observe(getViewLifecycleOwner(), removedObserver);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mBinding = null;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
         mViewModel.getShoppingData().removeObserver(shoppingsObserver);
         mViewModel.getRemovedData().removeObserver(removedObserver);
+        mBinding = null;
     }
 
     @Override
@@ -110,7 +125,7 @@ public class ShoppingsFragment extends Fragment {
             mViewModel.clearShoppingList();
             clearRecyclerView();
         });
-        mBinding.back.setOnClickListener(v -> listener.goBack());
+        mBinding.back.setOnClickListener(v -> listener.backHome());
     }
 
     @SuppressLint("SetTextI18n")
@@ -132,7 +147,7 @@ public class ShoppingsFragment extends Fragment {
 
     public void clearRecyclerView() {
         if (mAdapter != null) {
-            //Deleting the List of the Categories
+            //Deleting the List of Shoppings
             mAdapter.clearAll();
         }
         showNoSavedShoppings();

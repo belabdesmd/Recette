@@ -7,4 +7,6 @@ public interface HomeListener {
     void recipesFromCategory(Long id, String name);
 
     void allRecipes();
+
+    void demandAccess(String home);
 }

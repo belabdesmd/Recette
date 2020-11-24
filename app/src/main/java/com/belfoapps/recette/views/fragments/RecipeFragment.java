@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -23,7 +22,6 @@ import com.belfoapps.recette.base.MainListener;
 import com.belfoapps.recette.databinding.RecipeFragmentBinding;
 import com.belfoapps.recette.models.pojo.Recipe;
 import com.belfoapps.recette.models.pojo.Shopping;
-import com.belfoapps.recette.ui.adapters.GeneralPagerAdapter;
 import com.belfoapps.recette.ui.adapters.ShoppingListAdapter;
 import com.belfoapps.recette.ui.adapters.StepsAdapter;
 import com.belfoapps.recette.ui.custom.RecipesItemDecoration;
@@ -34,18 +32,17 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.google.android.material.tabs.TabLayout;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class RecipeFragment extends Fragment {
     private static final String TAG = "RecipeFragment";
+    public static final String ID = "id";
 
     /***********************************************************************************************
      * *********************************** Declarations
@@ -53,6 +50,15 @@ public class RecipeFragment extends Fragment {
     private RecipeFragmentBinding mBinding;
     private RecipeViewModel mViewModel;
     private MainListener listener;
+    private Long recipeId;
+
+    //Callbacks
+    private final OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+        @Override
+        public void handleOnBackPressed() {
+            listener.backHome();
+        }
+    };
 
     //Observers
     private final Observer<Recipe> recipeObserver = this::setContent;
@@ -61,6 +67,16 @@ public class RecipeFragment extends Fragment {
     /***********************************************************************************************
      * *********************************** LifeCycle
      */
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null)
+            recipeId = getArguments().getLong(ID);
+
+        //Going back
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -81,33 +97,42 @@ public class RecipeFragment extends Fragment {
         //Set ViewModel
         mViewModel = new ViewModelProvider(requireActivity()).get(RecipeViewModel.class);
 
+        //Data Observer
+        mViewModel.getRecipeData().observe(getViewLifecycleOwner(), recipeObserver);
+
+        if (savedInstanceState == null) {
+            //Load Recipe
+            mViewModel.loadRecipe(recipeId);
+        } else {
+            recipeId = savedInstanceState.getLong(ID);
+
+            //Set Content
+            setContent(mViewModel.getRecipe());
+        }
+
         //Init
         init();
-
-        //Get Data
-        mViewModel.getRecipeData().observe(getViewLifecycleOwner(), recipeObserver);
-        if (getArguments() != null)
-            mViewModel.getRecipe(getArguments().getLong("recipeId", 0));
 
         //Refresh
         mBinding.swipeRefreshRecipe.setOnRefreshListener(() -> {
             //Init UI
             if (getArguments() != null)
-                mViewModel.getRecipe(getArguments().getLong("recipeId", 0));
+                mViewModel.loadRecipe(recipeId);
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(ID, recipeId);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mBinding = null;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
         mViewModel.getRecipeData().removeObserver(recipeObserver);
         mViewModel.getBookmarkedData().removeObserver(bookmarkedObserver);
+        mBinding = null;
     }
 
     @Override
@@ -129,8 +154,8 @@ public class RecipeFragment extends Fragment {
         mViewModel.getBookmarkedData().observe(getViewLifecycleOwner(), bookmarkedObserver);
 
         //Listeners
-        mBinding.back.setOnClickListener(v -> listener.goBack());
-        mBinding.backContent.setOnClickListener(v -> listener.goBack());
+        mBinding.back.setOnClickListener(v -> listener.backHome());
+        mBinding.backContent.setOnClickListener(v -> listener.backHome());
         mBinding.bookmark.setOnClickListener(v -> {
             if (v.getTag().equals(0))
                 mViewModel.saveRecipe();

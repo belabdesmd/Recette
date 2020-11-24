@@ -4,6 +4,10 @@
     <!-- Settings -->
     <string name="website">www.facebook.com</string>
     <string name="BASE_API_URL">https://sheets.googleapis.com/v4/spreadsheets/</string>
+    <string name="ADMOB_BANNER_ID" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="INTERSTITIAL_AD_ID" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="PUBLISHER_ID" translatable="false">pub-4679171106713552</string>
+    <string name="PRIVACY_URL" translatable="false">www</string>
     <item name="AVG_ADDING_TIME" type="integer">12</item>
 
     <!-- ViewPager Tabs -->

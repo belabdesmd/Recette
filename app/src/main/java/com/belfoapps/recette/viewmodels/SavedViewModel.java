@@ -23,6 +23,7 @@ public class SavedViewModel extends ViewModel {
     private MutableLiveData<List<Recipe>> recipesData;
     private final AppDatabase mDb;
     private final SharedPreferencesHelper mSharedPrefs;
+    private List<Recipe> mRecipes;
 
     /***********************************************************************************************
      * *********************************** Constructor
@@ -36,7 +37,7 @@ public class SavedViewModel extends ViewModel {
     /***********************************************************************************************
      * *********************************** Methods
      */
-    public void getRecipes() {
+    public void loadRecipes() {
         new GetRecipes().execute();
     }
 
@@ -45,6 +46,10 @@ public class SavedViewModel extends ViewModel {
         if (recipesData == null)
             recipesData = new MutableLiveData<>();
         return recipesData;
+    }
+
+    public List<Recipe> getRecipes(){
+        return mRecipes;
     }
 
     //AsyncTasks
@@ -64,7 +69,14 @@ public class SavedViewModel extends ViewModel {
         @Override
         protected void onPostExecute(List<Recipe> recipes) {
             super.onPostExecute(recipes);
+            mRecipes = recipes;
             recipesData.postValue(recipes);
         }
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        mRecipes = null;
     }
 }

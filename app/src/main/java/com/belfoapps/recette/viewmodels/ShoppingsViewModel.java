@@ -25,6 +25,7 @@ public class ShoppingsViewModel extends ViewModel {
     private MutableLiveData<Boolean> removedData;
     private final AppDatabase mDb;
     private final SharedPreferencesHelper mSharedPrefs;
+    private List<Shopping> mShoppings;
 
     /***********************************************************************************************
      * *********************************** Constructor
@@ -38,7 +39,7 @@ public class ShoppingsViewModel extends ViewModel {
     /***********************************************************************************************
      * *********************************** Methods
      */
-    public void getShoppings() {
+    public void loadShoppings() {
         new GetShoppings("Get").execute();
     }
 
@@ -71,11 +72,15 @@ public class ShoppingsViewModel extends ViewModel {
         return mSharedPrefs.getLastTimeUpdated();
     }
 
+    public List<Shopping> getShoppings() {
+        return mShoppings;
+    }
+
     //AsyncTasks
     @SuppressLint("StaticFieldLeak")
     public class GetShoppings extends AsyncTask<Void, Void, List<Shopping>> {
 
-        private String mode;
+        private final String mode;
 
         public GetShoppings(String mode) {
             this.mode = mode;
@@ -89,9 +94,10 @@ public class ShoppingsViewModel extends ViewModel {
         @Override
         protected void onPostExecute(List<Shopping> shoppings) {
             super.onPostExecute(shoppings);
-            if (mode.equals("Get"))
+            if (mode.equals("Get")) {
+                mShoppings = shoppings;
                 shoppingData.postValue(shoppings);
-            else if (mode.equals("Clear"))
+            } else if (mode.equals("Clear"))
                 new ClearShoppings().execute(shoppings);
         }
     }
@@ -144,5 +150,11 @@ public class ShoppingsViewModel extends ViewModel {
             super.onPostExecute(aVoid);
             removedData.postValue(true);
         }
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        mShoppings = null;
     }
 }

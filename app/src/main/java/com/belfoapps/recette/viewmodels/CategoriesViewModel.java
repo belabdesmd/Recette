@@ -17,6 +17,7 @@ import com.belfoapps.recette.utils.DataFetcher;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class CategoriesViewModel extends ViewModel {
     private final AppDatabase mDb;
     private final SharedPreferencesHelper mSharedPrefs;
     private final DataFetcher fetcher;
+    private List<Category> mCategories;
 
     /***********************************************************************************************
      * *********************************** Constructor
@@ -44,14 +46,7 @@ public class CategoriesViewModel extends ViewModel {
     /***********************************************************************************************
      * *********************************** Methods
      */
-    //Getters
-    public MutableLiveData<List<Category>> getCategoriesData() {
-        if (categoriesData == null)
-            categoriesData = new MutableLiveData<>();
-        return categoriesData;
-    }
-
-    public void getCategories(Boolean fetched) {
+    public void loadCategories(Boolean fetched) {
         new GetCategories().execute(fetched);
     }
 
@@ -65,12 +60,23 @@ public class CategoriesViewModel extends ViewModel {
 
     public void refetchData(LifecycleOwner owner) {
         fetcher.getFetched().observe(owner, fetched -> {
-            getCategories(fetched);
+            loadCategories(fetched);
             //Save Timestamp LOG
             mSharedPrefs.setTimestamp(System.currentTimeMillis());
             fetcher.destroyFetched();
         });
         fetcher.fetchData();
+    }
+
+    //Getters
+    public MutableLiveData<List<Category>> getCategoriesData() {
+        if (categoriesData == null)
+            categoriesData = new MutableLiveData<>();
+        return categoriesData;
+    }
+
+    public List<Category> getCategories(){
+        return mCategories;
     }
 
     //AsyncTasks
@@ -87,7 +93,14 @@ public class CategoriesViewModel extends ViewModel {
         @Override
         protected void onPostExecute(List<Category> categories) {
             super.onPostExecute(categories);
+            mCategories = categories;
             categoriesData.postValue(categories);
         }
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        mCategories = null;
     }
 }

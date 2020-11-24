@@ -13,4 +13,6 @@ public interface MainListener {
     void goToShoppings();
 
     void goBack();
+
+    void backHome();
 }

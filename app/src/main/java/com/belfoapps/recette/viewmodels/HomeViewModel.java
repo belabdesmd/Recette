@@ -30,6 +30,7 @@ public class HomeViewModel extends ViewModel {
     private final AppDatabase mDb;
     private final SharedPreferencesHelper mSharedPrefs;
     private final DataFetcher fetcher;
+    private List<Recipe> mRecipes;
 
     /***********************************************************************************************
      * *********************************** Constructor
@@ -44,7 +45,7 @@ public class HomeViewModel extends ViewModel {
     /***********************************************************************************************
      * *********************************** Methods
      */
-    public void getRecipes(Boolean fetched) {
+    public void loadRecipes(Boolean fetched) {
         new GetRecipes().execute(fetched);
     }
 
@@ -58,7 +59,7 @@ public class HomeViewModel extends ViewModel {
 
     public void refetchData(LifecycleOwner owner) {
         fetcher.getFetched().observe(owner, fetched -> {
-            getRecipes(fetched);
+            loadRecipes(fetched);
             //Save Timestamp LOG
             mSharedPrefs.setTimestamp(System.currentTimeMillis());
             fetcher.destroyFetched();
@@ -71,6 +72,10 @@ public class HomeViewModel extends ViewModel {
         if (recipesData == null)
             recipesData = new MutableLiveData<>();
         return recipesData;
+    }
+
+    public List<Recipe> getRecipes(){
+        return mRecipes;
     }
 
     //AsyncTasks
@@ -87,7 +92,14 @@ public class HomeViewModel extends ViewModel {
         @Override
         protected void onPostExecute(List<Recipe> recipes) {
             super.onPostExecute(recipes);
+            mRecipes = recipes;
             recipesData.postValue(recipes);
         }
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        mRecipes = null;
     }
 }

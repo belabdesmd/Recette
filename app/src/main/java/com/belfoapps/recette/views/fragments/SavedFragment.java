@@ -71,34 +71,34 @@ public class SavedFragment extends Fragment {
         //Set ViewModel
         mViewModel = new ViewModelProvider(this).get(SavedViewModel.class);
 
-        //Init UI
-        init();
-
-        //Get Data
+        //Data Observer
         mViewModel.getRecipesData().observe(getViewLifecycleOwner(), recipesObserver);
-        mViewModel.getRecipes();
+
+        if (savedInstanceState == null) {
+            //Load Recipes
+            mViewModel.loadRecipes();
+        } else {
+            //Init RecyclerView
+            initRecyclerView(mViewModel.getRecipes());
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mViewModel.getRecipesData().removeObserver(recipesObserver);
         mBinding = null;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mViewModel.getRecipesData().removeObserver(recipesObserver);
         listener = null;
     }
 
     /***********************************************************************************************
      * *********************************** Methods
      */
-    private void init() {
-        mBinding.shimmerViewContainer.setVisibility(View.GONE);
-    }
-
     public void initRecyclerView(List<Recipe> recipes) {
         StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(COL_NUM, StaggeredGridLayoutManager.VERTICAL);
         mAdapter = new RecipesAdapter(recipes, listener, getContext());
@@ -118,7 +118,7 @@ public class SavedFragment extends Fragment {
             mAdapter.addAll(recipes);
         }
 
-        if (!recipes.isEmpty())
+        if (recipes != null && !recipes.isEmpty())
             showRecipesList();
         else showNoSavedRecipes();
     }

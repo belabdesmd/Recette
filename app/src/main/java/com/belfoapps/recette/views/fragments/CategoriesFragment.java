@@ -74,11 +74,15 @@ public class CategoriesFragment extends Fragment implements MainFragment.Categor
         //Init ViewModel
         mViewModel = new ViewModelProvider(this).get(CategoriesViewModel.class);
 
-        //Init UI
-        init();
-
-        //Get Data
-        mViewModel.getCategoriesData().observe(getViewLifecycleOwner(), categoriesObserver);
+        if (savedInstanceState == null) {
+            //Loading UI
+            mBinding.shimmerViewContainer.startShimmer();
+            //Load Categories
+            mViewModel.getCategoriesData().observe(getViewLifecycleOwner(), categoriesObserver);
+        } else {
+            //Init RecyclerView
+            initRecyclerView(mViewModel.getCategories());
+        }
 
         //Refresh Data
         mBinding.swipeRefreshCategories.setOnRefreshListener(() -> {
@@ -86,31 +90,30 @@ public class CategoriesFragment extends Fragment implements MainFragment.Categor
                 mViewModel.refetchData(getViewLifecycleOwner());
             else mBinding.swipeRefreshCategories.setRefreshing(false);
         });
+
+        //Demand Access
+        listener.demandAccess("Categories");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mViewModel.getCategoriesData().removeObserver(categoriesObserver);
         mBinding = null;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mViewModel.getCategoriesData().removeObserver(categoriesObserver);
         listener = null;
     }
 
     /***********************************************************************************************
      * *********************************** Methods
      */
-    private void init() {
-        mBinding.shimmerViewContainer.startShimmer();
-    }
-
     @Override
     public void getData() {
-        mViewModel.getCategories(true);
+        mViewModel.loadCategories(true);
     }
 
     public void initRecyclerView(List<Category> categories) {
@@ -122,7 +125,7 @@ public class CategoriesFragment extends Fragment implements MainFragment.Categor
         mBinding.categoriesRecyclerview.addItemDecoration(new RecipesItemDecoration());
         mBinding.categoriesRecyclerview.setAdapter(mAdapter);
 
-        if (!categories.isEmpty())
+        if (categories != null && !categories.isEmpty())
             showCategoriesList();
         else showError();
     }
@@ -136,7 +139,7 @@ public class CategoriesFragment extends Fragment implements MainFragment.Categor
             mAdapter.addAll(categories);
         }
 
-        if (!categories.isEmpty())
+        if (categories != null && !categories.isEmpty())
             showCategoriesList();
         else showError();
     }

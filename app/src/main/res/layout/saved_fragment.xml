@@ -16,47 +16,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/shimmer_view_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintTop_toTopOf="parent"
-                app:shimmer_direction="left_to_right"
-                app:shimmer_repeat_mode="restart">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <include
-                        android:id="@+id/first"
-                        layout="@layout/recipe_item_placeholder"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                    <include
-                        android:id="@+id/second"
-                        layout="@layout/recipe_item_placeholder"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/first" />
-
-                    <include
-                        layout="@layout/recipe_item_placeholder"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/second" />
-                </RelativeLayout>
-
-            </com.facebook.shimmer.ShimmerFrameLayout>
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recipes_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
-                android:paddingBottom="64dp"
                 android:visibility="gone"
                 app:layout_constraintTop_toTopOf="parent" />
 

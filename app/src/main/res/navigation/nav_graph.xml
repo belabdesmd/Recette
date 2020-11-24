@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/mainFragment">
-
+    <action
+        android:id="@+id/back"
+        app:destination="@id/mainFragment" />
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.belfoapps.recette.views.MainFragment"

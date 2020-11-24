@@ -26,7 +26,7 @@ public class RecipeViewModel extends ViewModel {
     private MutableLiveData<Boolean> bookmarkedData;
     private final AppDatabase mDb;
     private final SharedPreferencesHelper mSharedPrefs;
-    private Recipe the_recipe;
+    private Recipe mRecipe;
 
     /***********************************************************************************************
      * *********************************** Constructor
@@ -40,7 +40,7 @@ public class RecipeViewModel extends ViewModel {
     /***********************************************************************************************
      * *********************************** Methods
      */
-    public void getRecipe(long recipeId) {
+    public void loadRecipe(long recipeId) {
         new GetRecipe().execute(recipeId);
     }
 
@@ -53,13 +53,13 @@ public class RecipeViewModel extends ViewModel {
     }
 
     public boolean isSaved() {
-        return mSharedPrefs.getRecipeIds().contains(the_recipe.getRecipeId());
+        return mSharedPrefs.getRecipeIds().contains(mRecipe.getRecipeId());
     }
 
     public void unSaveRecipe() {
         ArrayList<Long> ids = mSharedPrefs.getRecipeIds();
-        if (!ids.contains(the_recipe.getRecipeId())) {
-            ids.add(the_recipe.getRecipeId());
+        if (!ids.contains(mRecipe.getRecipeId())) {
+            ids.add(mRecipe.getRecipeId());
             mSharedPrefs.saveRecipeIds(ids);
         }
         bookmarkedData.postValue(true);
@@ -67,7 +67,7 @@ public class RecipeViewModel extends ViewModel {
 
     public void saveRecipe() {
         ArrayList<Long> ids = mSharedPrefs.getRecipeIds();
-        ids.remove(the_recipe.getRecipeId());
+        ids.remove(mRecipe.getRecipeId());
         mSharedPrefs.saveRecipeIds(ids);
         bookmarkedData.postValue(false);
     }
@@ -85,6 +85,10 @@ public class RecipeViewModel extends ViewModel {
         return bookmarkedData;
     }
 
+    public Recipe getRecipe() {
+        return mRecipe;
+    }
+
     //AsyncTasks
     @SuppressLint("StaticFieldLeak")
     public class GetRecipe extends AsyncTask<Long, Void, Recipe> {
@@ -97,7 +101,7 @@ public class RecipeViewModel extends ViewModel {
         @Override
         protected void onPostExecute(Recipe recipe) {
             super.onPostExecute(recipe);
-            the_recipe = recipe;
+            mRecipe = recipe;
             recipeData.postValue(recipe);
         }
     }
@@ -133,5 +137,11 @@ public class RecipeViewModel extends ViewModel {
             @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             mSharedPrefs.setLastTimeUpdated(sdf.format(new Date()));
         }
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        mRecipe = null;
     }
 }
