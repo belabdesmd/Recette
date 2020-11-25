@@ -76,9 +76,11 @@ public class HomeFragment extends Fragment implements MainFragment.HomeDataLoade
         //Init ViewModel
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
+        //Loading UI
+        mBinding.shimmerViewContainer.setVisibility(View.VISIBLE);
+        mBinding.shimmerViewContainer.startShimmer();
+
         if (savedInstanceState == null) {
-            //Loading UI
-            mBinding.shimmerViewContainer.startShimmer();
             //Load Recipes
             mViewModel.getRecipesData().observe(getViewLifecycleOwner(), recipesObserver);
         } else {

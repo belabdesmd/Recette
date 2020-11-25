@@ -104,6 +104,9 @@ public class RecipeFragment extends Fragment {
         //Set ViewModel
         mViewModel = new ViewModelProvider(requireActivity()).get(RecipeViewModel.class);
 
+        //Init
+        init();
+
         //Data Observer
         mViewModel.getRecipeData().observe(getViewLifecycleOwner(), recipeObserver);
 
@@ -117,9 +120,6 @@ public class RecipeFragment extends Fragment {
             //Set Content
             setContent(mViewModel.getRecipe());
         }
-
-        //Init
-        init();
 
         //Refresh
         mBinding.swipeRefreshRecipe.setOnRefreshListener(() -> {

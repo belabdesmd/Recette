@@ -93,12 +93,14 @@ public class RecipesFragment extends Fragment {
         //Set ViewModel
         mViewModel = new ViewModelProvider(requireActivity()).get(RecipesViewModel.class);
 
+        //Loading UI
+        mBinding.shimmerViewContainer.setVisibility(View.VISIBLE);
+        mBinding.shimmerViewContainer.startShimmer();
+
         //Data Observer
         mViewModel.getRecipesData().observe(getViewLifecycleOwner(), recipesObserver);
 
         if (savedInstanceState == null) {
-            //Loading UI
-            mBinding.shimmerViewContainer.startShimmer();
             //Load Recipes
             mViewModel.loadRecipes(categoryId);
         } else {

@@ -74,9 +74,11 @@ public class CategoriesFragment extends Fragment implements MainFragment.Categor
         //Init ViewModel
         mViewModel = new ViewModelProvider(this).get(CategoriesViewModel.class);
 
+        //Loading UI
+        mBinding.shimmerViewContainer.setVisibility(View.VISIBLE);
+        mBinding.shimmerViewContainer.startShimmer();
+
         if (savedInstanceState == null) {
-            //Loading UI
-            mBinding.shimmerViewContainer.startShimmer();
             //Load Categories
             mViewModel.getCategoriesData().observe(getViewLifecycleOwner(), categoriesObserver);
         } else {
