@@ -9,6 +9,9 @@
     <string name="PUBLISHER_ID" translatable="false">pub-4679171106713552</string>
     <string name="PRIVACY_URL" translatable="false">www</string>
     <item name="AVG_ADDING_TIME" type="integer">12</item>
+    <bool name="GDPR_Enabled">true</bool>
+    <bool name="INTERSTITIAL_AD_Enabled">true</bool>
+    <integer name="INTERSTITIAL_AD_COUNT">5</integer>
 
     <!-- ViewPager Tabs -->
     <string-array name="main_tab_titles">

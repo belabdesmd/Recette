@@ -8,7 +8,7 @@ public interface MainListener {
 
     void recipesFromCategory(Long categoryId, String categoryName);
 
-    void goToRecipe(Long recipeId);
+    void goToRecipe(Long recipeId, boolean fromHome);
 
     void goToShoppings();
 

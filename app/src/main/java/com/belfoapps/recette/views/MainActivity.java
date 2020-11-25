@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -47,9 +48,20 @@ public class MainActivity extends AppCompatActivity implements MainListener {
         //Init Navigation
         initNavigation();
 
+        //Check GDPR
+        mViewModel.checkGDPRConsent(getResources().getBoolean(R.bool.GDPR_Enabled));
+
+        //Init Interstitial Ad
+        mViewModel.initInterstitialAd(this);
+
         //Loading Data
         if (savedInstanceState == null)
             mViewModel.loadData(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -129,9 +141,10 @@ public class MainActivity extends AppCompatActivity implements MainListener {
     }
 
     @Override
-    public void goToRecipe(Long recipeId) {
+    public void goToRecipe(Long recipeId, boolean fromHome) {
         Bundle bundle = new Bundle();
         bundle.putLong("recipeId", recipeId);
+        bundle.putBoolean("fromHome", fromHome);
         Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.recipe, bundle);
     }
 
@@ -143,6 +156,11 @@ public class MainActivity extends AppCompatActivity implements MainListener {
     @Override
     public void goBack() {
         onBackPressed();
+
+        //Show Interstitial
+        if (getResources().getBoolean(R.bool.INTERSTITIAL_AD_Enabled) &&
+                mViewModel.ableToShowInterstitial(this))
+            mViewModel.showInterstitialAd();
     }
 
     @Override
@@ -150,5 +168,10 @@ public class MainActivity extends AppCompatActivity implements MainListener {
         Bundle bundle = new Bundle();
         bundle.putBoolean("back", true);
         Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.back, bundle);
+
+        //Show Interstitial
+        if (getResources().getBoolean(R.bool.INTERSTITIAL_AD_Enabled) &&
+                mViewModel.ableToShowInterstitial(this))
+            mViewModel.showInterstitialAd();
     }
 }

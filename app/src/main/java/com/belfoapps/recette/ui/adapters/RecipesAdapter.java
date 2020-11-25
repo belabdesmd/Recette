@@ -82,7 +82,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
 
         if (listener1 != null)
             holder.container.setOnClickListener(v -> listener1.goToRecipe(mRecipes.get(position).getRecipeId()));
-        else holder.container.setOnClickListener(v -> listener2.goToRecipe(mRecipes.get(position).getRecipeId()));
+        else holder.container.setOnClickListener(v -> listener2.goToRecipe(mRecipes.get(position).getRecipeId(), false));
 
 
     }

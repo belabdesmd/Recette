@@ -251,7 +251,7 @@ public class MainFragment extends Fragment implements HomeListener {
 
     @Override
     public void goToRecipe(Long recipeId) {
-        listener.goToRecipe(recipeId);
+        listener.goToRecipe(recipeId, true);
     }
 
     @Override

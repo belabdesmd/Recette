@@ -14,6 +14,8 @@ import com.belfoapps.recette.base.AppDatabase;
 import com.belfoapps.recette.models.SharedPreferencesHelper;
 import com.belfoapps.recette.models.pojo.Recipe;
 import com.belfoapps.recette.utils.DataFetcher;
+import com.belfoapps.recette.utils.GDPR;
+import com.google.android.gms.ads.AdView;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -30,21 +32,32 @@ public class HomeViewModel extends ViewModel {
     private final AppDatabase mDb;
     private final SharedPreferencesHelper mSharedPrefs;
     private final DataFetcher fetcher;
+    private final GDPR gdpr;
     private List<Recipe> mRecipes;
 
     /***********************************************************************************************
      * *********************************** Constructor
      */
     @ViewModelInject
-    public HomeViewModel(AppDatabase mDb, SharedPreferencesHelper mSharedPrefs, DataFetcher fetcher) {
+    public HomeViewModel(AppDatabase mDb, SharedPreferencesHelper mSharedPrefs, DataFetcher fetcher,
+                         GDPR gdpr) {
         this.mDb = mDb;
         this.mSharedPrefs = mSharedPrefs;
         this.fetcher = fetcher;
+        this.gdpr = gdpr;
     }
 
     /***********************************************************************************************
      * *********************************** Methods
      */
+    public void loadAd(AdView ad) {
+        if (mSharedPrefs.isAdPersonalized()) {
+            gdpr.showPersonalizedAdBanner(ad);
+        } else {
+            gdpr.showNonPersonalizedAdBanner(ad);
+        }
+    }
+
     public void loadRecipes(Boolean fetched) {
         new GetRecipes().execute(fetched);
     }
@@ -74,7 +87,7 @@ public class HomeViewModel extends ViewModel {
         return recipesData;
     }
 
-    public List<Recipe> getRecipes(){
+    public List<Recipe> getRecipes() {
         return mRecipes;
     }
 

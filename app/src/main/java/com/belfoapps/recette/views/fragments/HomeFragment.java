@@ -25,6 +25,8 @@ import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
+import static android.view.View.GONE;
+
 @AndroidEntryPoint
 public class HomeFragment extends Fragment implements MainFragment.HomeDataLoadedListener {
     private static final String TAG = "HomeFragment";
@@ -83,6 +85,9 @@ public class HomeFragment extends Fragment implements MainFragment.HomeDataLoade
             //Init RecyclerView
             initRecyclerView(mViewModel.getRecipes());
         }
+
+        //Load Ads
+        mViewModel.loadAd(mBinding.ad);
 
         //Init Listener
         mBinding.seeMore.setOnClickListener(v -> listener.allRecipes());
@@ -150,13 +155,12 @@ public class HomeFragment extends Fragment implements MainFragment.HomeDataLoade
         error_occurred = true;
 
         mBinding.shimmerViewContainer.stopShimmer();
-        mBinding.shimmerViewContainer.setVisibility(View.GONE);
+        mBinding.shimmerViewContainer.setVisibility(GONE);
 
         mBinding.errorImage.setImageResource(R.drawable.error);
         mBinding.errorText.setText(getResources().getString(R.string.general_error));
         mBinding.error.setVisibility(View.VISIBLE);
-        mBinding.recipesRecyclerview.setVisibility(View.GONE);
-        mBinding.seeMore.setVisibility(View.GONE);
+        mBinding.swipeRefreshHome.setVisibility(GONE);
 
         mBinding.swipeRefreshHome.setRefreshing(false);
     }
@@ -166,11 +170,10 @@ public class HomeFragment extends Fragment implements MainFragment.HomeDataLoade
         error_occurred = false;
 
         mBinding.shimmerViewContainer.stopShimmer();
-        mBinding.shimmerViewContainer.setVisibility(View.GONE);
+        mBinding.shimmerViewContainer.setVisibility(GONE);
 
-        mBinding.error.setVisibility(View.GONE);
-        mBinding.recipesRecyclerview.setVisibility(View.VISIBLE);
-        mBinding.seeMore.setVisibility(View.VISIBLE);
+        mBinding.error.setVisibility(GONE);
+        mBinding.swipeRefreshHome.setVisibility(View.VISIBLE);
 
         mBinding.swipeRefreshHome.setRefreshing(false);
     }

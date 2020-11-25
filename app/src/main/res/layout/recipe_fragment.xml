@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -34,9 +35,10 @@
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_recipe"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@android:color/white">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -45,12 +47,6 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/top_bar"
-                    android:layout_width="match_parent"
-                    android:layout_height="256dp"
-                    app:layout_constraintTop_toTopOf="parent">
 
                     <ImageButton
                         android:id="@+id/back_content"
@@ -79,169 +75,177 @@
                     <ImageView
                         android:id="@+id/recipe_details_cover"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="256dp"
+                        ads:layout_constraintTop_toTopOf="parent"
                         android:scaleType="fitXY" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        android:id="@+id/recipe_details_title"
+                        style="@style/RecipeTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        app:layout_constraintEnd_toStartOf="@id/share"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/recipe_details_cover"
+                        tools:text="Punjabi Chickern in Thick Heavy kkfefef" />
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/content"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:cardBackgroundColor="@color/cardColor"
-                    app:layout_constraintTop_toBottomOf="@id/top_bar">
+                    <ImageButton
+                        android:id="@+id/share"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="24dp"
+                        android:background="@null"
+                        android:src="@drawable/share"
+                        app:layout_constraintBottom_toBottomOf="@id/recipe_details_title"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/recipe_details_title" />
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                    <LinearLayout
+                        android:id="@+id/time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="@id/recipe_details_title"
+                        app:layout_constraintTop_toBottomOf="@id/recipe_details_title">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:src="@drawable/time" />
 
                         <TextView
-                            android:id="@+id/recipe_details_title"
-                            style="@style/RecipeTitle"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="24dp"
-                            android:layout_marginTop="24dp"
-                            android:layout_marginEnd="24dp"
-                            app:layout_constraintEnd_toStartOf="@id/share"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:text="Punjabi Chickern in Thick Heavy kkfefef" />
-
-                        <ImageButton
-                            android:id="@+id/share"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="24dp"
-                            android:background="@null"
-                            android:src="@drawable/share"
-                            app:layout_constraintBottom_toBottomOf="@id/recipe_details_title"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="@id/recipe_details_title" />
-
-                        <LinearLayout
-                            android:id="@+id/time"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintStart_toStartOf="@id/recipe_details_title"
-                            app:layout_constraintTop_toBottomOf="@id/recipe_details_title">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="8dp"
-                                android:src="@drawable/time" />
-
-                            <TextView
-                                style="@style/SmallTitle"
-                                android:id="@+id/recipe_details_time"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                tools:text="0 min" />
-
-                        </LinearLayout>
-
-                        <View
-                            android:id="@+id/separator"
-                            android:layout_width="1dp"
-                            android:layout_height="12dp"
-                            android:layout_marginStart="12dp"
-                            android:background="@color/secondaryTextColor"
-                            app:layout_constraintBottom_toBottomOf="@id/time"
-                            app:layout_constraintStart_toEndOf="@id/time"
-                            app:layout_constraintTop_toTopOf="@id/time" />
-
-                        <LinearLayout
-                            android:id="@+id/servings"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            app:layout_constraintStart_toEndOf="@id/separator"
-                            app:layout_constraintTop_toBottomOf="@id/recipe_details_title">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="8dp"
-                                android:src="@drawable/servings" />
-
-                            <TextView
-                                android:id="@+id/recipe_details_servings"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                tools:text="0" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/recipe_details_category"
+                            android:id="@+id/recipe_details_time"
                             style="@style/SmallTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/colorAccent"
-                            app:layout_constraintStart_toStartOf="@id/recipe_details_title"
-                            app:layout_constraintTop_toBottomOf="@id/time"
-                            tools:text="Category Name" />
+                            android:layout_gravity="center_vertical"
+                            tools:text="0 min" />
 
-                        <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
-                            android:id="@+id/youtube_player_view"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="24dp"
-                            android:layout_marginTop="16dp"
-                            android:layout_marginEnd="24dp"
-                            app:autoPlay="false"
-                            app:layout_constraintTop_toBottomOf="@id/recipe_details_category"
-                            app:showFullScreenButton="false"
-                            app:videoId="S0Q4gqBUs7c" />
+                    </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/ingredients_text"
+                    <View
+                        android:id="@+id/separator"
+                        android:layout_width="1dp"
+                        android:layout_height="12dp"
+                        android:layout_marginStart="12dp"
+                        android:background="@color/secondaryTextColor"
+                        app:layout_constraintBottom_toBottomOf="@id/time"
+                        app:layout_constraintStart_toEndOf="@id/time"
+                        app:layout_constraintTop_toTopOf="@id/time" />
+
+                    <LinearLayout
+                        android:id="@+id/servings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        app:layout_constraintStart_toEndOf="@id/separator"
+                        app:layout_constraintTop_toBottomOf="@id/recipe_details_title">
+
+                        <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:layout_constraintTop_toBottomOf="@id/youtube_player_view"
-                            android:layout_marginStart="24dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            android:layout_marginTop="16dp"
-                            style="@style/PageTitle"
-                            android:text="@string/ingredients"/>
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/ingredients_recyclerview"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginEnd="16dp"
-                            app:layout_constraintTop_toBottomOf="@id/ingredients_text"
-                            android:clipToPadding="false"/>
+                            android:layout_marginEnd="8dp"
+                            android:src="@drawable/servings" />
 
                         <TextView
-                            android:id="@+id/steps_text"
+                            android:id="@+id/recipe_details_servings"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:layout_constraintTop_toBottomOf="@id/ingredients_recyclerview"
-                            android:layout_marginStart="24dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            android:layout_marginTop="16dp"
-                            style="@style/PageTitle"
-                            android:text="@string/steps"/>
+                            android:layout_gravity="center_vertical"
+                            tools:text="0" />
+                    </LinearLayout>
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/steps_recyclerview"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            app:layout_constraintTop_toBottomOf="@id/steps_text"
-                            android:layout_marginEnd="24dp"
-                            android:layout_marginTop="8dp"/>
+                    <TextView
+                        android:id="@+id/recipe_details_category"
+                        style="@style/SmallTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorAccent"
+                        app:layout_constraintStart_toStartOf="@id/recipe_details_title"
+                        app:layout_constraintTop_toBottomOf="@id/time"
+                        tools:text="Category Name" />
 
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+                        android:id="@+id/youtube_player_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="24dp"
+                        app:autoPlay="false"
+                        app:layout_constraintTop_toBottomOf="@id/recipe_details_category"
+                        app:showFullScreenButton="false"
+                        app:videoId="S0Q4gqBUs7c" />
 
-                </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:id="@+id/ingredients_text"
+                        style="@style/PageTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/ingredients"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/youtube_player_view" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/ingredients_recyclerview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:clipToPadding="false"
+                        app:layout_constraintTop_toBottomOf="@id/ingredients_text" />
+
+                    <com.google.android.gms.ads.AdView
+                        android:id="@+id/ad_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        ads:adSize="BANNER"
+                        ads:adUnitId="@string/ADMOB_BANNER_ID"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/ingredients_recyclerview" />
+
+                    <TextView
+                        android:id="@+id/steps_text"
+                        style="@style/PageTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/steps"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/ad_1" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/steps_recyclerview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="24dp"
+                        app:layout_constraintTop_toBottomOf="@id/steps_text" />
+
+                    <com.google.android.gms.ads.AdView
+                        android:id="@+id/ad_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="16dp"
+                        ads:adSize="BANNER"
+                        ads:adUnitId="@string/ADMOB_BANNER_ID"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/steps_recyclerview" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
 

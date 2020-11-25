@@ -43,6 +43,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class RecipeFragment extends Fragment {
     private static final String TAG = "RecipeFragment";
     public static final String ID = "id";
+    public static final String HOME = "fromHome";
 
     /***********************************************************************************************
      * *********************************** Declarations
@@ -51,12 +52,15 @@ public class RecipeFragment extends Fragment {
     private RecipeViewModel mViewModel;
     private MainListener listener;
     private Long recipeId;
+    private boolean fromHome;
 
     //Callbacks
     private final OnBackPressedCallback callback = new OnBackPressedCallback(true) {
         @Override
         public void handleOnBackPressed() {
-            listener.backHome();
+            if (fromHome)
+                listener.backHome();
+            else listener.goBack();
         }
     };
 
@@ -70,8 +74,10 @@ public class RecipeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null)
+        if (getArguments() != null) {
             recipeId = getArguments().getLong(ID);
+            fromHome = getArguments().getBoolean(HOME);
+        }
 
         //Going back
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
@@ -105,6 +111,7 @@ public class RecipeFragment extends Fragment {
             mViewModel.loadRecipe(recipeId);
         } else {
             recipeId = savedInstanceState.getLong(ID);
+            fromHome = savedInstanceState.getBoolean(HOME);
 
             //Set Content
             setContent(mViewModel.getRecipe());
@@ -125,6 +132,7 @@ public class RecipeFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putLong(ID, recipeId);
+        outState.putBoolean(HOME, fromHome);
     }
 
     @Override
@@ -150,18 +158,28 @@ public class RecipeFragment extends Fragment {
         mBinding.backContent.bringToFront();
         mBinding.shimmerViewContainer.startShimmer();
 
-        //Bookmarked Listener
-        mViewModel.getBookmarkedData().observe(getViewLifecycleOwner(), bookmarkedObserver);
+        //Load Ads
+        mViewModel.loadAd(mBinding.ad1);
+        mViewModel.loadAd(mBinding.ad2);
 
         //Listeners
-        mBinding.back.setOnClickListener(v -> listener.backHome());
-        mBinding.backContent.setOnClickListener(v -> listener.backHome());
+        mBinding.back.setOnClickListener(v -> {
+            if (fromHome)
+                listener.backHome();
+            else listener.goBack();
+        });
+        mBinding.backContent.setOnClickListener(v -> {
+            if (fromHome)
+                listener.backHome();
+            else listener.goBack();
+        });
         mBinding.bookmark.setOnClickListener(v -> {
             if (v.getTag().equals(0))
                 mViewModel.saveRecipe();
             else
                 mViewModel.unSaveRecipe();
         });
+        mViewModel.getBookmarkedData().observe(getViewLifecycleOwner(), bookmarkedObserver);
     }
 
     @SuppressLint("SetTextI18n")
@@ -252,7 +270,7 @@ public class RecipeFragment extends Fragment {
         //init Recycler View
         StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         ArrayList<Shopping> shoppings = new ArrayList<>();
-        for (String ingredient:
+        for (String ingredient :
                 ingredients) {
             shoppings.add(new Shopping(null, ingredient, false));
         }

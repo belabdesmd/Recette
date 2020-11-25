@@ -109,6 +109,9 @@ public class RecipesFragment extends Fragment {
             initRecyclerView(mViewModel.getRecipes());
         }
 
+        //Load Ads
+        mViewModel.loadAd(mBinding.ad);
+
         //Category Name
         mBinding.categoryName.setText(categoryName);
 
@@ -175,7 +178,7 @@ public class RecipesFragment extends Fragment {
         mBinding.errorImage.setImageResource(R.drawable.error);
         mBinding.errorText.setText(getResources().getString(R.string.general_error));
         mBinding.error.setVisibility(View.VISIBLE);
-        mBinding.recipesRecyclerview.setVisibility(View.GONE);
+        mBinding.swipeRefreshRecipes.setVisibility(View.GONE);
 
         mBinding.swipeRefreshRecipes.setRefreshing(false);
     }
@@ -185,7 +188,7 @@ public class RecipesFragment extends Fragment {
         mBinding.shimmerViewContainer.setVisibility(View.GONE);
 
         mBinding.error.setVisibility(View.GONE);
-        mBinding.recipesRecyclerview.setVisibility(View.VISIBLE);
+        mBinding.swipeRefreshRecipes.setVisibility(View.VISIBLE);
 
         mBinding.swipeRefreshRecipes.setRefreshing(false);
     }

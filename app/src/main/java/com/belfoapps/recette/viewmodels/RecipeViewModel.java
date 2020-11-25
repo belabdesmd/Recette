@@ -11,6 +11,8 @@ import com.belfoapps.recette.base.AppDatabase;
 import com.belfoapps.recette.models.SharedPreferencesHelper;
 import com.belfoapps.recette.models.pojo.Recipe;
 import com.belfoapps.recette.models.pojo.Shopping;
+import com.belfoapps.recette.utils.GDPR;
+import com.google.android.gms.ads.AdView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,20 +28,30 @@ public class RecipeViewModel extends ViewModel {
     private MutableLiveData<Boolean> bookmarkedData;
     private final AppDatabase mDb;
     private final SharedPreferencesHelper mSharedPrefs;
+    private final GDPR gdpr;
     private Recipe mRecipe;
 
     /***********************************************************************************************
      * *********************************** Constructor
      */
     @ViewModelInject
-    public RecipeViewModel(AppDatabase mDb, SharedPreferencesHelper mSharedPrefs) {
+    public RecipeViewModel(AppDatabase mDb, SharedPreferencesHelper mSharedPrefs, GDPR gdpr) {
         this.mDb = mDb;
         this.mSharedPrefs = mSharedPrefs;
+        this.gdpr = gdpr;
     }
 
     /***********************************************************************************************
      * *********************************** Methods
      */
+    public void loadAd(AdView ad) {
+        if (mSharedPrefs.isAdPersonalized()) {
+            gdpr.showPersonalizedAdBanner(ad);
+        } else {
+            gdpr.showNonPersonalizedAdBanner(ad);
+        }
+    }
+
     public void loadRecipe(long recipeId) {
         new GetRecipe().execute(recipeId);
     }
