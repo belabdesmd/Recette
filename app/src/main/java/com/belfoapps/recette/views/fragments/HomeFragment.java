@@ -160,7 +160,7 @@ public class HomeFragment extends Fragment implements MainFragment.HomeDataLoade
         mBinding.errorImage.setImageResource(R.drawable.error);
         mBinding.errorText.setText(getResources().getString(R.string.general_error));
         mBinding.error.setVisibility(View.VISIBLE);
-        mBinding.swipeRefreshHome.setVisibility(GONE);
+        mBinding.homeContent.setVisibility(GONE);
 
         mBinding.swipeRefreshHome.setRefreshing(false);
     }
@@ -173,7 +173,7 @@ public class HomeFragment extends Fragment implements MainFragment.HomeDataLoade
         mBinding.shimmerViewContainer.setVisibility(GONE);
 
         mBinding.error.setVisibility(GONE);
-        mBinding.swipeRefreshHome.setVisibility(View.VISIBLE);
+        mBinding.homeContent.setVisibility(View.VISIBLE);
 
         mBinding.swipeRefreshHome.setRefreshing(false);
     }

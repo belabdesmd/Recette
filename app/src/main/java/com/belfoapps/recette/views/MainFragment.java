@@ -85,8 +85,10 @@ public class MainFragment extends Fragment implements HomeListener {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //In Case Back Pressed
-        if (getArguments() != null && getArguments().getBoolean("back"))
+        if (getArguments() != null && getArguments().getBoolean("back")) {
             back = getArguments().getBoolean("back");
+
+        }
     }
 
     @Override
@@ -232,6 +234,10 @@ public class MainFragment extends Fragment implements HomeListener {
                 ((TextView) tab1.getCustomView().findViewById(R.id.tab_title)).setTextColor(getResources().getColor(R.color.secondaryTextColor));
             }
         }
+    }
+
+    public void navigateViewPager(int go_to) {
+        mBinding.mainPager.setCurrentItem(go_to);
     }
 
     @Override

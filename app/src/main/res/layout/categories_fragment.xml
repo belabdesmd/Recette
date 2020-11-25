@@ -19,69 +19,62 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <ScrollView
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer_view_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fillViewport="true">
+        android:orientation="vertical"
+        app:shimmer_direction="left_to_right"
+        app:shimmer_repeat_mode="restart">
 
-        <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/shimmer_view_container"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:shimmer_direction="left_to_right"
-            app:shimmer_repeat_mode="restart">
+            android:layout_height="match_parent">
 
-            <RelativeLayout
+            <include
+                android:id="@+id/first"
+                layout="@layout/category_item_placeholder"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="164dp" />
 
-                <include
-                    android:id="@+id/first"
-                    layout="@layout/category_item_placeholder"
-                    android:layout_width="match_parent"
-                    android:layout_height="164dp" />
+            <include
+                android:id="@+id/second"
+                layout="@layout/category_item_placeholder"
+                android:layout_width="match_parent"
+                android:layout_height="164dp"
+                android:layout_below="@id/first" />
 
-                <include
-                    android:id="@+id/second"
-                    layout="@layout/category_item_placeholder"
-                    android:layout_width="match_parent"
-                    android:layout_height="164dp"
-                    android:layout_below="@id/first" />
+            <include
+                android:id="@+id/third"
+                layout="@layout/category_item_placeholder"
+                android:layout_width="match_parent"
+                android:layout_height="164dp"
+                android:layout_below="@id/second" />
 
-                <include
-                    android:id="@+id/third"
-                    layout="@layout/category_item_placeholder"
-                    android:layout_width="match_parent"
-                    android:layout_height="164dp"
-                    android:layout_below="@id/second" />
+            <include
+                android:id="@+id/forth"
+                layout="@layout/category_item_placeholder"
+                android:layout_width="match_parent"
+                android:layout_height="164dp"
+                android:layout_below="@id/third" />
 
-                <include
-                    android:id="@+id/forth"
-                    layout="@layout/category_item_placeholder"
-                    android:layout_width="match_parent"
-                    android:layout_height="164dp"
-                    android:layout_below="@id/third" />
+            <include
+                android:id="@+id/fifth"
+                layout="@layout/category_item_placeholder"
+                android:layout_width="match_parent"
+                android:layout_height="164dp"
+                android:layout_below="@id/forth" />
 
-                <include
-                    android:id="@+id/fifth"
-                    layout="@layout/category_item_placeholder"
-                    android:layout_width="match_parent"
-                    android:layout_height="164dp"
-                    android:layout_below="@id/forth" />
+        </RelativeLayout>
 
-            </RelativeLayout>
-
-        </com.facebook.shimmer.ShimmerFrameLayout>
-
-    </ScrollView>
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
     <RelativeLayout
         android:id="@+id/error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/error_image"
@@ -93,6 +86,7 @@
 
         <TextView
             android:id="@+id/error_text"
+            style="@style/SecondaryText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/error_image"
@@ -100,8 +94,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="48dp"
             android:text="@string/general_error"
-            android:textAlignment="center"
-            style="@style/SecondaryText"/>
+            android:textAlignment="center" />
 
     </RelativeLayout>
 

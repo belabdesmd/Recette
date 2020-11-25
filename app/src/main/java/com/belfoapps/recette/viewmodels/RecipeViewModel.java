@@ -2,6 +2,7 @@ package com.belfoapps.recette.viewmodels;
 
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.hilt.lifecycle.ViewModelInject;
 import androidx.lifecycle.MutableLiveData;
@@ -70,18 +71,18 @@ public class RecipeViewModel extends ViewModel {
 
     public void unSaveRecipe() {
         ArrayList<Long> ids = mSharedPrefs.getRecipeIds();
+        ids.remove(mRecipe.getRecipeId());
+        mSharedPrefs.saveRecipeIds(ids);
+        bookmarkedData.postValue(false);
+    }
+
+    public void saveRecipe() {
+        ArrayList<Long> ids = mSharedPrefs.getRecipeIds();
         if (!ids.contains(mRecipe.getRecipeId())) {
             ids.add(mRecipe.getRecipeId());
             mSharedPrefs.saveRecipeIds(ids);
         }
         bookmarkedData.postValue(true);
-    }
-
-    public void saveRecipe() {
-        ArrayList<Long> ids = mSharedPrefs.getRecipeIds();
-        ids.remove(mRecipe.getRecipeId());
-        mSharedPrefs.saveRecipeIds(ids);
-        bookmarkedData.postValue(false);
     }
 
     //Getters
@@ -92,6 +93,7 @@ public class RecipeViewModel extends ViewModel {
     }
 
     public MutableLiveData<Boolean> getBookmarkedData() {
+        Log.d(TAG, "getBookmarkedData");
         if (bookmarkedData == null)
             bookmarkedData = new MutableLiveData<>();
         return bookmarkedData;

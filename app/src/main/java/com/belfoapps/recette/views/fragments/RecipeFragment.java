@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class RecipeFragment extends Fragment {
     private static final String TAG = "RecipeFragment";
-    public static final String ID = "id";
+    public static final String ID = "recipeId";
     public static final String HOME = "fromHome";
 
     /***********************************************************************************************
@@ -176,8 +177,7 @@ public class RecipeFragment extends Fragment {
         mBinding.bookmark.setOnClickListener(v -> {
             if (v.getTag().equals(0))
                 mViewModel.saveRecipe();
-            else
-                mViewModel.unSaveRecipe();
+            else mViewModel.unSaveRecipe();
         });
         mViewModel.getBookmarkedData().observe(getViewLifecycleOwner(), bookmarkedObserver);
     }

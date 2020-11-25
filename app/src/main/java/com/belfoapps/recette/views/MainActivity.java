@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.TextAppearanceSpan;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -77,20 +80,28 @@ public class MainActivity extends AppCompatActivity implements MainListener {
     private void initNavigation() {
         //Init Navigation
         mBinding.navView.setItemIconTintList(null);
+
+        //Change Titles color
+        MenuItem pages = mBinding.navView.getMenu().findItem(R.id.pages);
+        MenuItem socials = mBinding.navView.getMenu().findItem(R.id.sociale_media);
+        SpannableString s1 = new SpannableString(pages.getTitle());
+        SpannableString s2 = new SpannableString(socials.getTitle());
+        s1.setSpan(new TextAppearanceSpan(this, R.style.Titles), 0, s1.length(), 0);
+        s2.setSpan(new TextAppearanceSpan(this, R.style.Titles), 0, s2.length(), 0);
+        pages.setTitle(s1);
+        socials.setTitle(s2);
         mBinding.navView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
             switch (id) {
                 case R.id.saved_recipes_menu:
-                    /*
                     ((MainFragment) getSupportFragmentManager().getPrimaryNavigationFragment()
                             .getChildFragmentManager().getPrimaryNavigationFragment())
-                            .navigateViewPager(2);*/
+                            .navigateViewPager(2);
                     break;
                 case R.id.categories_menu:
-                    /*
                     ((MainFragment) getSupportFragmentManager().getPrimaryNavigationFragment()
                             .getChildFragmentManager().getPrimaryNavigationFragment())
-                            .navigateViewPager(1);*/
+                            .navigateViewPager(1);
                     break;
                 case R.id.shopping_list_menu:
                     goToShoppings();

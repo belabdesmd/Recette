@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.belfoapps.recette.R;
 import com.belfoapps.recette.base.HomeListener;
@@ -74,6 +75,9 @@ public class SavedFragment extends Fragment {
         //Data Observer
         mViewModel.getRecipesData().observe(getViewLifecycleOwner(), recipesObserver);
 
+        //Refresh Layout
+        mBinding.swipeRefreshHome.setRefreshing(true);
+
         if (savedInstanceState == null) {
             //Load Recipes
             mViewModel.loadRecipes();
@@ -81,6 +85,9 @@ public class SavedFragment extends Fragment {
             //Init RecyclerView
             initRecyclerView(mViewModel.getRecipes());
         }
+
+        //Refresh Listener
+        mBinding.swipeRefreshHome.setOnRefreshListener(() -> mViewModel.loadRecipes());
     }
 
     @Override
@@ -127,11 +134,15 @@ public class SavedFragment extends Fragment {
         mBinding.errorImage.setImageResource(R.drawable.empty);
         mBinding.errorText.setText(getResources().getString(R.string.empty_error));
         mBinding.error.setVisibility(View.VISIBLE);
-        mBinding.recipesRecyclerview.setVisibility(View.GONE);
+        mBinding.savedContent.setVisibility(View.GONE);
+
+        mBinding.swipeRefreshHome.setRefreshing(false);
     }
 
     public void showRecipesList() {
         mBinding.error.setVisibility(View.GONE);
-        mBinding.recipesRecyclerview.setVisibility(View.VISIBLE);
+        mBinding.savedContent.setVisibility(View.VISIBLE);
+
+        mBinding.swipeRefreshHome.setRefreshing(false);
     }
 }

@@ -48,7 +48,6 @@
         android:id="@+id/swipe_refresh_home"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.core.widget.NestedScrollView
@@ -56,6 +55,8 @@
             android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/home_content"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -69,9 +70,8 @@
                     android:id="@+id/ad"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
                     ads:adSize="BANNER"
+                    android:layout_marginTop="4dp"
                     ads:adUnitId="@string/ADMOB_BANNER_ID"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -80,13 +80,23 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/see_more"
                     style="@style/TabTitle"
+                    ads:elevation="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:layout_marginBottom="16dp"
-                    android:background="@android:color/transparent"
+                    android:layout_marginBottom="8dp"
+                    android:textAllCaps="false"
+                    ads:backgroundTint="@color/colorAccent"
                     android:text="@string/see_more"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@android:color/white"
+                    ads:cornerRadius="32dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    ads:icon="@drawable/more"
+                    ads:iconGravity="start"
+                    ads:iconTint="@android:color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -106,14 +116,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.40">
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/error_image"
             android:layout_width="128dp"
             android:layout_height="128dp"
             android:layout_centerHorizontal="true"
+            app:tint="@color/secondaryTextColor"
             android:src="@drawable/error" />
 
         <TextView

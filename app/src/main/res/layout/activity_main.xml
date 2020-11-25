@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="#FFFFFF"
+    android:background="@drawable/background"
     tools:context=".views.MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,12 +27,15 @@
             app:navGraph="@navigation/nav_graph" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        app:itemTextColor="@color/primaryTextColor"
+        android:background="@drawable/drawer_background"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/navigation_menu" />
 </androidx.drawerlayout.widget.DrawerLayout>
