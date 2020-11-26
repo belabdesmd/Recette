@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">Recette</string>
+
+    <!-- Settings -->
+    <string name="website">www.facebook.com</string>
+    <string name="BASE_API_URL">https://sheets.googleapis.com/v4/spreadsheets/</string>
+    <string name="ADMOB_BANNER_ID" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="INTERSTITIAL_AD_ID" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="PUBLISHER_ID" translatable="false">pub-4679171106713552</string>
+    <string name="PRIVACY_URL" translatable="false">www</string>
+    <item name="AVG_ADDING_TIME" type="integer">12</item>
+    <bool name="GDPR_Enabled">true</bool>
+    <bool name="INTERSTITIAL_AD_Enabled">true</bool>
+    <integer name="INTERSTITIAL_AD_COUNT">5</integer>
+
+    <!-- ViewPager Tabs -->
+    <string-array name="main_tab_titles">
+        <item>Accueil</item>
+        <item>Catégories</item>
+        <item>Enregistrées</item>
+    </string-array>
+    <string-array name="recipe_tab_titles">
+        <item>Ingrédients</item>
+        <item>Étapes</item>
+    </string-array>
+
+    <!-- Drawer Menu Texts -->
+    <string name="pages">Pages</string>
+    <string name="saved_recipes_action">Recettes enregistrées</string>
+    <string name="categories_action">Catégories</string>
+    <string name="shopping_list_action">Liste d\'achats</string>
+    <string name="contact_us_action">Nous contacter</string>
+    <string name="social_media">Médias sociaux</string>
+    <string name="youtube_action">Youtube</string>
+    <string name="youtube_channel_id" translatable="false">UCVXD2kNki3rfLMhF8uNIcBQ</string>
+    <string name="instagram_action">Instagram</string>
+    <string name="instagram_username" translatable="false">instagram</string>
+    <string name="facebook_action">Facebook</string>
+    <string name="facebook_page_link" translatable="false">https://www.facebook.com/</string>
+    <string name="twitter_action">Twitter</string>
+    <string name="twitter_id" translatable="false">twitter</string>
+
+    <!-- Errors -->
+    <string name="general_error">Une erreur s\'est produite. S\'il n\'y a pas de connexion réseau, vérifiez que vous êtes connecté à une connexion Wi-fi ou mobile et réessayez.</string>
+    <string name="empty_error">Il semble qu\'il n\'y ait pas de contenu disponible.</string>
+    <string name="wrong_recipe_error">La recette que vous avez demandée n\'existe pas.</string>
+
+    <!-- Titles -->
+    <string name="shopping_list">Liste d\'achats</string>
+    <string name="last_update">Dernière mise à jour</string>
+
+    <!-- Others -->
+    <string name="steps">Étapes</string>
+    <string name="ingredients">Ingrédients</string>
+    <string name="min">min</string>
+    <string name="all_recipes">Toutes les recettes</string>
+    <string name="see_more">Voir plus</string>
+
+    <!-- DO NOT CHANGE THIS -->
+    <item name="swipe_direction" type="integer">0</item>
+</resources>

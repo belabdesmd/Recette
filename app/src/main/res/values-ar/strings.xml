@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">Recette</string>
+
+    <!-- Settings -->
+    <string name="website">www.facebook.com</string>
+    <string name="BASE_API_URL">https://sheets.googleapis.com/v4/spreadsheets/</string>
+    <string name="ADMOB_BANNER_ID" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="INTERSTITIAL_AD_ID" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="PUBLISHER_ID" translatable="false">pub-4679171106713552</string>
+    <string name="PRIVACY_URL" translatable="false">www</string>
+    <item name="AVG_ADDING_TIME" type="integer">12</item>
+    <bool name="GDPR_Enabled">true</bool>
+    <bool name="INTERSTITIAL_AD_Enabled">true</bool>
+    <integer name="INTERSTITIAL_AD_COUNT">5</integer>
+
+    <!-- ViewPager Tabs -->
+    <string-array name="main_tab_titles">
+        <item>الرئيسية</item>
+        <item>التصنيفات</item>
+        <item>محفوظات</item>
+    </string-array>
+    <string-array name="recipe_tab_titles">
+        <item>المقادير</item>
+        <item>الخطوات</item>
+    </string-array>
+
+    <!-- Drawer Menu Texts -->
+    <string name="pages">صفحات</string>
+    <string name="saved_recipes_action">الوصفات المحفوظة</string>
+    <string name="categories_action">التصنيفات</string>
+    <string name="shopping_list_action">قائمة التسوق</string>
+    <string name="contact_us_action">إتصل بنا</string>
+    <string name="social_media">وسائل التواصل الاجتماعي</string>
+    <string name="youtube_action">يوتيوب</string>
+    <string name="youtube_channel_id" translatable="false">UCVXD2kNki3rfLMhF8uNIcBQ</string>
+    <string name="instagram_action">أنستغرام</string>
+    <string name="instagram_username" translatable="false">instagram</string>
+    <string name="facebook_action">فيسبوك</string>
+    <string name="facebook_page_link" translatable="false">https://www.facebook.com/</string>
+    <string name="twitter_action">تويتر</string>
+    <string name="twitter_id" translatable="false">twitter</string>
+
+    <!-- Errors -->
+    <string name="general_error">حدث خطأ ، إذا لم يكن هناك اتصال بالشبكة ، فتأكد من أنك متصل بشبكة Wi-fi أو اتصال محمول وحاول مرة أخرى.</string>
+    <string name="empty_error">يبدو أنه لا يوجد محتوى متاح.</string>
+    <string name="wrong_recipe_error">الوصفة التي طلبتها غير موجودة.</string>
+
+    <!-- Titles -->
+    <string name="shopping_list">قائمة التسوق</string>
+    <string name="last_update">آخر التحديثات</string>
+
+    <!-- Others -->
+    <string name="steps">الخطوات</string>
+    <string name="ingredients">المقادير</string>
+    <string name="min">دقيقة</string>
+    <string name="all_recipes">جميع الوصفات</string>
+    <string name="see_more">المزيد</string>
+
+    <!-- DO NOT CHANGE THIS -->
+    <item name="swipe_direction" type="integer">0</item>
+</resources>
