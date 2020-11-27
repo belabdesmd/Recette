@@ -51,7 +51,9 @@ public interface ContentDAO {
             "WHERE recipeId = :id")
     public Recipe getRecipe(Long id);
 
-    @Query("SELECT * FROM RECIPES WHERE recipeCategory = :category")
+    @Query("SELECT * FROM RECIPES " +
+            "INNER JOIN (SELECT id as categoryId, categoryTitle FROM CATEGORIES) ON categoryId = recipeCategory " +
+            "WHERE recipeCategory = :category")
     public List<Recipe> getRecipesByCategory(Long category);
 
     @Query("SELECT * FROM CATEGORIES")

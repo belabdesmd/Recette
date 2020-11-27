@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,9 +58,7 @@ public class RecipeFragment extends Fragment {
     private final OnBackPressedCallback callback = new OnBackPressedCallback(true) {
         @Override
         public void handleOnBackPressed() {
-            if (fromHome)
-                listener.backHome();
-            else listener.goBack();
+            listener.backHome();
         }
     };
 
@@ -81,7 +78,8 @@ public class RecipeFragment extends Fragment {
         }
 
         //Going back
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+        if (fromHome)
+            requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     @Override
@@ -157,6 +155,7 @@ public class RecipeFragment extends Fragment {
         //Init UI
         mBinding.back.bringToFront();
         mBinding.backContent.bringToFront();
+        mBinding.shimmerViewContainer.setVisibility(View.VISIBLE);
         mBinding.shimmerViewContainer.startShimmer();
 
         //Load Ads
@@ -188,11 +187,12 @@ public class RecipeFragment extends Fragment {
             //Setup
             mBinding.shimmerViewContainer.stopShimmer();
             mBinding.shimmerViewContainer.setVisibility(View.GONE);
+
             mBinding.back.setVisibility(View.GONE);
             mBinding.bookmark.bringToFront();
             mBinding.back.bringToFront();
             mBinding.error.setVisibility(View.GONE);
-            mBinding.swipeRefreshRecipe.setVisibility(View.VISIBLE);
+            mBinding.recipeContent.setVisibility(View.VISIBLE);
 
             //ViewPager
             initIngredientsRecyclerView(recipe.getRecipeIngredients());
@@ -261,7 +261,8 @@ public class RecipeFragment extends Fragment {
             mBinding.errorImage.setImageResource(R.drawable.error);
             mBinding.errorText.setText(getResources().getString(R.string.wrong_recipe_error));
             mBinding.error.setVisibility(View.VISIBLE);
-            mBinding.swipeRefreshRecipe.setVisibility(View.GONE);
+
+            mBinding.recipeContent.setVisibility(View.GONE);
         }
         mBinding.swipeRefreshRecipe.setRefreshing(false);
     }

@@ -2,6 +2,7 @@ package com.belfoapps.recette.views.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.belfoapps.recette.ui.custom.RecipesItemDecoration;
 import com.belfoapps.recette.viewmodels.RecipesViewModel;
 import com.belfoapps.recette.views.MainActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -39,7 +41,6 @@ public class RecipesFragment extends Fragment {
      */
     private RecipesFragmentBinding mBinding;
     private RecipesViewModel mViewModel;
-    private RecipesAdapter mAdapter;
     private MainListener listener;
     private String categoryName;
     private Long categoryId;
@@ -53,11 +54,7 @@ public class RecipesFragment extends Fragment {
     };
 
     //Observers
-    private final Observer<List<Recipe>> recipesObserver = recipes -> {
-        if (mAdapter == null)
-            initRecyclerView(recipes);
-        else updateRecyclerView(recipes);
-    };
+    private final Observer<List<Recipe>> recipesObserver = this::initRecyclerView;
 
     /***********************************************************************************************
      * *********************************** LifeCycle
@@ -69,6 +66,7 @@ public class RecipesFragment extends Fragment {
             categoryName = getArguments().getString("categoryName");
             categoryId = getArguments().getLong("categoryId", 0);
         }
+
         //Going back
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
@@ -147,8 +145,8 @@ public class RecipesFragment extends Fragment {
      * *********************************** Methods
      */
     public void initRecyclerView(List<Recipe> recipes) {
+        RecipesAdapter mAdapter = new RecipesAdapter(new ArrayList<>(recipes), listener, getContext());
         StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(COL_NUM, StaggeredGridLayoutManager.VERTICAL);
-        mAdapter = new RecipesAdapter(recipes, listener, getContext());
         mBinding.recipesRecyclerview.setLayoutManager(mLayoutManager);
         mBinding.recipesRecyclerview.addItemDecoration(new RecipesItemDecoration());
         mBinding.recipesRecyclerview.setAdapter(mAdapter);
@@ -157,21 +155,6 @@ public class RecipesFragment extends Fragment {
             showRecipesList();
         else showError();
     }
-
-    public void updateRecyclerView(List<Recipe> recipes) {
-        if (mAdapter != null) {
-            //Deleting the List of the Categories
-            mAdapter.clearAll();
-
-            // Adding The New List of Categories
-            mAdapter.addAll(recipes);
-        }
-
-        if (recipes != null && !recipes.isEmpty())
-            showRecipesList();
-        else showError();
-    }
-
 
     public void showError() {
         mBinding.shimmerViewContainer.stopShimmer();

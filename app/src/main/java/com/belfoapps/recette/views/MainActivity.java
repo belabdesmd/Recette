@@ -166,7 +166,8 @@ public class MainActivity extends AppCompatActivity implements MainListener {
 
     @Override
     public void goBack() {
-        onBackPressed();
+        //onBackPressed();
+        Navigation.findNavController(this, R.id.nav_host_fragment).popBackStack();
 
         //Show Interstitial
         if (getResources().getBoolean(R.bool.INTERSTITIAL_AD_Enabled) &&

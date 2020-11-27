@@ -23,24 +23,41 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHolder> {
     /*************************************** Declarations *****************************************/
-    private List<Recipe> mRecipes;
+    private ArrayList<Recipe> mRecipes;
     private Context context;
     private HomeListener listener1;
     private MainListener listener2;
 
     /*************************************** Constructor ******************************************/
-    public RecipesAdapter(List<Recipe> mRecipes, HomeListener listener, Context context) {
-        this.mRecipes = mRecipes;
+    public RecipesAdapter(ArrayList<Recipe> mRecipes, HomeListener listener, Context context) {
+        this.mRecipes = new ArrayList<>();
+        for (Recipe recipe:
+                mRecipes) {
+            try {
+                this.mRecipes.add((Recipe) recipe.clone());
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+        }
         this.context = context;
         this.listener1 = listener;
     }
 
-    public RecipesAdapter(List<Recipe> mRecipes, MainListener listener, Context context) {
-        this.mRecipes = mRecipes;
+    public RecipesAdapter(ArrayList<Recipe> mRecipes, MainListener listener, Context context) {
+        this.mRecipes = new ArrayList<>();
+        for (Recipe recipe:
+                mRecipes) {
+            try {
+                this.mRecipes.add((Recipe) recipe.clone());
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+        }
         this.context = context;
         this.listener2 = listener;
     }
@@ -99,7 +116,14 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
     }
 
     public void addAll(List<Recipe> recipes) {
-        mRecipes = recipes;
+        for (Recipe recipe:
+             recipes) {
+            try {
+                mRecipes.add((Recipe) recipe.clone());
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+        }
         notifyDataSetChanged();
     }
 

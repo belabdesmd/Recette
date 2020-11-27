@@ -1,5 +1,6 @@
 package com.belfoapps.recette.models.pojo;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 @Entity(tableName = "recipes")
-public class Recipe {
+public class Recipe implements Cloneable {
 
     @PrimaryKey
     private long recipeId;
@@ -123,5 +124,11 @@ public class Recipe {
         if (o == null || getClass() != o.getClass()) return false;
         Recipe recipe = (Recipe) o;
         return Objects.equals(recipeId, recipe.recipeId);
+    }
+
+    @NonNull
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

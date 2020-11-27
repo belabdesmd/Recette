@@ -35,16 +35,11 @@ public class CategoriesFragment extends Fragment implements MainFragment.Categor
      */
     private CategoriesViewModel mViewModel;
     private CategoriesFragmentBinding mBinding;
-    private CategoriesAdapter mAdapter;
     private HomeListener listener;
     private boolean error_occurred = false;
 
     //Observers
-    private final Observer<List<Category>> categoriesObserver = categories -> {
-        if (mAdapter == null)
-            initRecyclerView(categories);
-        else updateRecyclerView(categories);
-    };
+    private final Observer<List<Category>> categoriesObserver = this::initRecyclerView;
 
     /***********************************************************************************************
      * *********************************** LifeCycle
@@ -121,25 +116,11 @@ public class CategoriesFragment extends Fragment implements MainFragment.Categor
     public void initRecyclerView(List<Category> categories) {
         //Declarations
         StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(COL_NUM, StaggeredGridLayoutManager.VERTICAL);
-        mAdapter = new CategoriesAdapter(categories, listener, getContext());
+        CategoriesAdapter mAdapter = new CategoriesAdapter(categories, listener, getContext());
 
         mBinding.categoriesRecyclerview.setLayoutManager(mLayoutManager);
         mBinding.categoriesRecyclerview.addItemDecoration(new RecipesItemDecoration());
         mBinding.categoriesRecyclerview.setAdapter(mAdapter);
-
-        if (categories != null && !categories.isEmpty())
-            showCategoriesList();
-        else showError();
-    }
-
-    public void updateRecyclerView(List<Category> categories) {
-        if (mAdapter != null) {
-            //Deleting the List of the Categories
-            mAdapter.clearAll();
-
-            // Adding The New List of Categories
-            mAdapter.addAll(categories);
-        }
 
         if (categories != null && !categories.isEmpty())
             showCategoriesList();

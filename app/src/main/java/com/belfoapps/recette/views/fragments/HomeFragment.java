@@ -21,6 +21,7 @@ import com.belfoapps.recette.ui.custom.RecipesItemDecoration;
 import com.belfoapps.recette.viewmodels.HomeViewModel;
 import com.belfoapps.recette.views.MainFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -126,7 +127,7 @@ public class HomeFragment extends Fragment implements MainFragment.HomeDataLoade
 
     public void initRecyclerView(List<Recipe> recipes) {
         StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(COL_NUM, StaggeredGridLayoutManager.VERTICAL);
-        mAdapter = new RecipesAdapter(recipes, listener, getContext());
+        mAdapter = new RecipesAdapter(new ArrayList<>(recipes), listener, getContext());
 
         mBinding.recipesRecyclerview.setLayoutManager(mLayoutManager);
         mBinding.recipesRecyclerview.addItemDecoration(new RecipesItemDecoration());

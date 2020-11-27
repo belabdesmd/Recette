@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.belfoapps.recette.R;
 import com.belfoapps.recette.base.HomeListener;
@@ -21,6 +20,7 @@ import com.belfoapps.recette.ui.adapters.RecipesAdapter;
 import com.belfoapps.recette.ui.custom.RecipesItemDecoration;
 import com.belfoapps.recette.viewmodels.SavedViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -35,15 +35,10 @@ public class SavedFragment extends Fragment {
      */
     private SavedFragmentBinding mBinding;
     private SavedViewModel mViewModel;
-    private RecipesAdapter mAdapter;
     private HomeListener listener;
 
     //Observers
-    private final Observer<List<Recipe>> recipesObserver = recipes -> {
-        if (mAdapter == null)
-            initRecyclerView(recipes);
-        else updateRecycleView(recipes);
-    };
+    private final Observer<List<Recipe>> recipesObserver = this::initRecyclerView;
 
     /***********************************************************************************************
      * *********************************** LifeCycle
@@ -108,22 +103,11 @@ public class SavedFragment extends Fragment {
      */
     public void initRecyclerView(List<Recipe> recipes) {
         StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(COL_NUM, StaggeredGridLayoutManager.VERTICAL);
-        mAdapter = new RecipesAdapter(recipes, listener, getContext());
+        RecipesAdapter mAdapter = new RecipesAdapter(new ArrayList<>(recipes), listener, getContext());
 
         mBinding.recipesRecyclerview.setLayoutManager(mLayoutManager);
         mBinding.recipesRecyclerview.addItemDecoration(new RecipesItemDecoration());
         mBinding.recipesRecyclerview.setAdapter(mAdapter);
-
-        if (recipes != null && !recipes.isEmpty())
-            showRecipesList();
-        else showNoSavedRecipes();
-    }
-
-    public void updateRecycleView(List<Recipe> recipes) {
-        if (mAdapter != null) {
-            mAdapter.clearAll();
-            mAdapter.addAll(recipes);
-        }
 
         if (recipes != null && !recipes.isEmpty())
             showRecipesList();
