@@ -148,7 +148,8 @@ public class RecipesFragment extends Fragment {
         RecipesAdapter mAdapter = new RecipesAdapter(new ArrayList<>(recipes), listener, getContext());
         StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(COL_NUM, StaggeredGridLayoutManager.VERTICAL);
         mBinding.recipesRecyclerview.setLayoutManager(mLayoutManager);
-        mBinding.recipesRecyclerview.addItemDecoration(new RecipesItemDecoration());
+        if (mBinding.recipesRecyclerview.getItemDecorationCount() == 0)
+            mBinding.recipesRecyclerview.addItemDecoration(new RecipesItemDecoration());
         mBinding.recipesRecyclerview.setAdapter(mAdapter);
 
         if (recipes != null && !recipes.isEmpty())

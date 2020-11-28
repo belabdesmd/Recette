@@ -279,7 +279,8 @@ public class RecipeFragment extends Fragment {
         ShoppingListAdapter mAdapter = new ShoppingListAdapter(mViewModel, shoppings, getContext());
 
         mBinding.ingredientsRecyclerview.setLayoutManager(mLayoutManager);
-        mBinding.ingredientsRecyclerview.addItemDecoration(new RecipesItemDecoration());
+        if (mBinding.ingredientsRecyclerview.getItemDecorationCount() == 0)
+            mBinding.ingredientsRecyclerview.addItemDecoration(new RecipesItemDecoration());
         mBinding.ingredientsRecyclerview.setAdapter(mAdapter);
     }
 
@@ -290,7 +291,8 @@ public class RecipeFragment extends Fragment {
         StepsAdapter mAdapter = new StepsAdapter(steps);
 
         mBinding.stepsRecyclerview.setLayoutManager(mLayoutManager);
-        mBinding.stepsRecyclerview.addItemDecoration(new RecipesItemDecoration());
+        if (mBinding.stepsRecyclerview.getItemDecorationCount() == 0)
+            mBinding.stepsRecyclerview.addItemDecoration(new RecipesItemDecoration());
         mBinding.stepsRecyclerview.setAdapter(mAdapter);
     }
 

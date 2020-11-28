@@ -119,7 +119,8 @@ public class CategoriesFragment extends Fragment implements MainFragment.Categor
         CategoriesAdapter mAdapter = new CategoriesAdapter(categories, listener, getContext());
 
         mBinding.categoriesRecyclerview.setLayoutManager(mLayoutManager);
-        mBinding.categoriesRecyclerview.addItemDecoration(new RecipesItemDecoration());
+        if (mBinding.categoriesRecyclerview.getItemDecorationCount() == 0)
+            mBinding.categoriesRecyclerview.addItemDecoration(new RecipesItemDecoration());
         mBinding.categoriesRecyclerview.setAdapter(mAdapter);
 
         if (categories != null && !categories.isEmpty())
