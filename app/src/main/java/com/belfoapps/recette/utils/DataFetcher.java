@@ -2,6 +2,7 @@ package com.belfoapps.recette.utils;
 
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -27,6 +28,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DataFetcher {
+    private static final String TAG = "DataFetcher";
 
     private MutableLiveData<Boolean> fetched;
     private final GoogleSheetsEndpoints endpoints;
